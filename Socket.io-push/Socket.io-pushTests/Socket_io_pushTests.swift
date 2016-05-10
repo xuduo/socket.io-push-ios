@@ -11,7 +11,7 @@ import XCTest
 
 class misakaDemoTests: XCTestCase ,PushCallback ,ConnectCallback{
     
-    var vc : ViewController!
+    
     var socketIOClient : SocketIOProxyClient!
     let url = "http://spush.yy.com/api/push?pushAll=true&topic=chatRoom&json=%@&timeToLive="
     let host = "http://spush.yy.com"
