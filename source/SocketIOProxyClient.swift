@@ -132,11 +132,19 @@ public class SocketIOProxyClient : NSObject {
         sendApnTokenToServer()
     }
     
-    public func subscribeBroadcast(topic:String ,receiveTtl:TTLReceiveType){
+    private func subscribeBroadcast(topic:String ,receiveTtl:TTLReceiveType){
         broadcastTopicsMap[topic] = receiveTtl
         if (connected) {
             self.socket!.emit("subscribeTopic", ["topic": topic])
         }
+    }
+    
+    public func subscribeBroadcast(topic:String){
+        self.subscribeBroadcast(topic, receiveTtl: TTLReceiveType.DoNotReceive);
+    }
+    
+    public func subscribeBroadcastReceiveTTL(topic:String){
+        self.subscribeBroadcast(topic, receiveTtl: TTLReceiveType.Receive);
     }
     
     public func unsubscribeBroadcast(topic:String){
