@@ -39,7 +39,7 @@ class ViewController: UIViewController,ConnectCallback,PushCallback/*,PushCallba
         socketIOClient.connectCallback = self
         let pushId = PushIdGeneratorBase().generatePushId()
         socketIOClient.setPushId(pushId)
-        socketIOClient.subscribeBroadcast("chatRoom",receiveTtl :.Receive)
+        socketIOClient.subscribeBroadcast("chatRoom")
         
         
         
