@@ -82,27 +82,17 @@ class ViewController: UIViewController,ConnectCallback,PushCallback/*,PushCallba
         self.tapView?.frame = self.chatTableView.frame
     }
     
-    
-    //MARK: - Socket Callbacks
-    func websocketDidConnect(topic : String, data : NSData?){
-        
-    }
-    
     //    func loge(level: String, format: String, args:va_list) {
     //        print("oc client log " + format,args);
     //    }
     
-    func onPushOc(topic: String!, nsstring: String!) {
-        print("onPushOc %@ %@",topic,nsstring);
-    }
-    
     func onConnect(uid:String){
-        //        latencyText.text = "connected"
+        print("onConnect \(uid)");
         self.navigationItem.title = "connected"
     }
     
     func onDisconnect() {
-        //        latencyText.text = "disconnected"
+        print("onDisconnect");
         self.navigationItem.title = "disconnected"
     }
     

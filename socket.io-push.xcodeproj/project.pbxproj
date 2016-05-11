@@ -13,7 +13,6 @@
 		7327ECB11CE3122600092D85 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7327ECA81CE3122600092D85 /* Main.storyboard */; };
 		7327ECB21CE3122600092D85 /* ChatInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECAA1CE3122600092D85 /* ChatInfo.swift */; };
 		7327ECB31CE3122600092D85 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7327ECAB1CE3122600092D85 /* Info.plist */; };
-		7327ECB41CE3122600092D85 /* StorageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECAC1CE3122600092D85 /* StorageUtil.swift */; };
 		7327ECB51CE3122600092D85 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECAD1CE3122600092D85 /* ViewController.swift */; };
 		7327ECCE1CE3122D00092D85 /* PushIdGeneratorBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECB81CE3122D00092D85 /* PushIdGeneratorBase.swift */; };
 		7327ECCF1CE3122D00092D85 /* SocketAckEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECBA1CE3122D00092D85 /* SocketAckEmitter.swift */; };
@@ -36,6 +35,7 @@
 		7327ECE01CE3122D00092D85 /* SwiftRegex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECCB1CE3122D00092D85 /* SwiftRegex.swift */; };
 		7327ECE11CE3122D00092D85 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECCC1CE3122D00092D85 /* WebSocket.swift */; };
 		7327ECE21CE3122D00092D85 /* SocketIOProxyClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECCD1CE3122D00092D85 /* SocketIOProxyClient.swift */; };
+		7327ECE91CE3141400092D85 /* StorageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECE81CE3141400092D85 /* StorageUtil.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,7 +55,6 @@
 		7327ECA91CE3122600092D85 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7327ECAA1CE3122600092D85 /* ChatInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInfo.swift; sourceTree = "<group>"; };
 		7327ECAB1CE3122600092D85 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7327ECAC1CE3122600092D85 /* StorageUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageUtil.swift; sourceTree = "<group>"; };
 		7327ECAD1CE3122600092D85 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		7327ECB71CE3122D00092D85 /* misakaSwift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = misakaSwift.h; sourceTree = "<group>"; };
 		7327ECB81CE3122D00092D85 /* PushIdGeneratorBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushIdGeneratorBase.swift; sourceTree = "<group>"; };
@@ -79,6 +78,7 @@
 		7327ECCB1CE3122D00092D85 /* SwiftRegex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftRegex.swift; sourceTree = "<group>"; };
 		7327ECCC1CE3122D00092D85 /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
 		7327ECCD1CE3122D00092D85 /* SocketIOProxyClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketIOProxyClient.swift; sourceTree = "<group>"; };
+		7327ECE81CE3141400092D85 /* StorageUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageUtil.swift; sourceTree = "<group>"; };
 		C364EA921CE1E3B00074FDCC /* Socket.io-push.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Socket.io-push.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C364EAA61CE1E3B10074FDCC /* Socket.io-pushTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Socket.io-pushTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -110,7 +110,6 @@
 				7327ECA81CE3122600092D85 /* Main.storyboard */,
 				7327ECAA1CE3122600092D85 /* ChatInfo.swift */,
 				7327ECAB1CE3122600092D85 /* Info.plist */,
-				7327ECAC1CE3122600092D85 /* StorageUtil.swift */,
 				7327ECAD1CE3122600092D85 /* ViewController.swift */,
 			);
 			path = "socket.io-push";
@@ -121,6 +120,7 @@
 			children = (
 				7327ECB71CE3122D00092D85 /* misakaSwift.h */,
 				7327ECB81CE3122D00092D85 /* PushIdGeneratorBase.swift */,
+				7327ECE81CE3141400092D85 /* StorageUtil.swift */,
 				7327ECB91CE3122D00092D85 /* SocketIOClientSwift */,
 				7327ECCD1CE3122D00092D85 /* SocketIOProxyClient.swift */,
 			);
@@ -294,9 +294,9 @@
 				7327ECDA1CE3122D00092D85 /* SocketIOClientStatus.swift in Sources */,
 				7327ECD21CE3122D00092D85 /* SocketEngine.swift in Sources */,
 				7327ECDB1CE3122D00092D85 /* SocketLogger.swift in Sources */,
-				7327ECB41CE3122600092D85 /* StorageUtil.swift in Sources */,
 				7327ECDE1CE3122D00092D85 /* SocketStringReader.swift in Sources */,
 				7327ECD91CE3122D00092D85 /* SocketIOClientOption.swift in Sources */,
+				7327ECE91CE3141400092D85 /* StorageUtil.swift in Sources */,
 				7327ECD01CE3122D00092D85 /* SocketAckManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
