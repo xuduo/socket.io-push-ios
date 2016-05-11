@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 @objc public protocol PushCallback {
-    func websocketDidConnect(topic : String, data : NSData?)
     func onPush(topic : String, data : NSData?)
 //    func loge(level:String,format:String,args:va_list)
 }
@@ -32,7 +31,6 @@ import UIKit
     func onPush(topic:String, data : AnyObject)
 }
 
-
 public enum TTLReceiveType : Int{
     case Receive = 1
     case DoNotReceive = 0
@@ -48,7 +46,6 @@ public class SocketIOProxyClient : NSObject {
     private var pushId:String?
     private var apnToken:String?
     private var connected = false
-//    private var broadcastTopics = NSMutableSet()
     private var broadcastTopicsMap = Dictionary<String ,TTLReceiveType>()
     private var topicToLastPacketId = Dictionary<String ,String>()
     
@@ -106,12 +103,7 @@ public class SocketIOProxyClient : NSObject {
             self.handlePush(data, ack: ack)
         }
         socket!.connect()
-        
-        
     }
-    
-    
-    
     
     public func keepInBackground() {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
@@ -141,7 +133,6 @@ public class SocketIOProxyClient : NSObject {
     }
     
     public func subscribeBroadcast(topic:String ,receiveTtl:TTLReceiveType){
-//        broadcastTopics.addObject(topic)
         broadcastTopicsMap[topic] = receiveTtl
         if (connected) {
             self.socket!.emit("subscribeTopic", ["topic": topic])
@@ -149,7 +140,6 @@ public class SocketIOProxyClient : NSObject {
     }
     
     public func unsubscribeBroadcast(topic:String){
-//        broadcastTopics.removeObject(topic)
         broadcastTopicsMap.removeValueForKey(topic)
         if (connected) {
             self.socket!.emit("unsubscribeTopic", ["topic": topic])
