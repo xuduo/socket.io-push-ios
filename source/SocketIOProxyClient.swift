@@ -50,7 +50,8 @@ public class SocketIOProxyClient : NSObject {
     private var topicToLastPacketId = Dictionary<String ,String>()
     
     public init(host:String){
-        super.init();
+        super.init()
+        pushId = PushIdGeneratorBase().generatePushId()
         let https = host.containsString("https://")
         socket = SocketIOClient(socketURL: host, options: [.Log(true), .ForceWebsockets(true), .Secure(https), .SelfSigned(https),  .ForceNew(true), .ReconnectWait(3)])
         
@@ -182,6 +183,10 @@ public class SocketIOProxyClient : NSObject {
     public func setPushId(pushId: String){
         self.pushId = pushId
         self.sendPushIdAndTopicToServer()
+    }
+    
+    public func getPushId() -> String{
+        return pushId!
     }
     
     private func handlePush(data:[AnyObject] ,ack:SocketAckEmitter){

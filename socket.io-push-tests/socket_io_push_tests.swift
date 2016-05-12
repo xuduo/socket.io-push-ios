@@ -20,7 +20,7 @@ class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
     
     
     var socketIOClient : SocketIOProxyClient!
-    let url = "http://spush.yy.com/api/push?pushAll=true&topic=chatRoom&json=%@&timeToLive="
+    let url = "http://spush.yy.com/api/push?pushId=%@&topic=chatRoom&json=%@&timeToLive="
     let host = "http://spush.yy.com"
     
     
@@ -35,8 +35,6 @@ class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
         socketIOClient = SocketIOProxyClient(host:host)
         socketIOClient.pushCallback = self
         socketIOClient.connectCallback = self
-        let pushId = PushIdGeneratorBase().generatePushId()
-        socketIOClient.setPushId(pushId)
         socketIOClient.subscribeBroadcast("chatRoom")
         
     }
@@ -52,14 +50,10 @@ class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
         //        vc.sendChat("Chat From Test")
         expectation = self.expectationWithDescription("Async request")
         
-        self.sendChat("This is a test message")
-        self.waitForExpectationsWithTimeout(60, handler: nil)
-    }
-    
-    
-    func websocketDidConnect(topic: String, data: NSData?) {
         
+        self.waitForExpectationsWithTimeout(10, handler: nil)
     }
+
     
     func onPush(topic: String, data: NSData?) {
         guard let hasData = data else{
@@ -87,17 +81,16 @@ class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
     }
     
     func onConnect(uid: String) {
-        
-        
+        self.sendChat("This is a test message")
     }
     
     func onDisconnect() {
         
     }
+    
     func sendChat(msg:String?){
         
         let message = msg == nil ? "" : msg!
-        
         
         let chatDic = [
             "nickName" : "Socket-io test",
@@ -125,7 +118,7 @@ class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
             return
         }
         
-        let jsonUrl = String(format: url, encodedStr)
+        let jsonUrl = String(format: url, socketIOClient.getPushId(), encodedStr)
         
         guard let reqUrl = NSURL(string: jsonUrl)  else{
             return
@@ -136,14 +129,6 @@ class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
         let dataTask = manager.dataTaskWithRequest(urlReq)
         
         dataTask.resume()
-    }
-    
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
     }
     
 }
