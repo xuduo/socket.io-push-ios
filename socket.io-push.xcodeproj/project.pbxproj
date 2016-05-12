@@ -36,10 +36,11 @@
 		7327ECE11CE3122D00092D85 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECCC1CE3122D00092D85 /* WebSocket.swift */; };
 		7327ECE21CE3122D00092D85 /* SocketIOProxyClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECCD1CE3122D00092D85 /* SocketIOProxyClient.swift */; };
 		7327ECE91CE3141400092D85 /* StorageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECE81CE3141400092D85 /* StorageUtil.swift */; };
+		C3567E4C1CE43133007F1216 /* Socket_io_pushTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3567E4A1CE4311B007F1216 /* Socket_io_pushTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C364EAA71CE1E3B10074FDCC /* PBXContainerItemProxy */ = {
+		C3567E451CE430D4007F1216 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C364EA8A1CE1E3B00074FDCC /* Project object */;
 			proxyType = 1;
@@ -79,19 +80,21 @@
 		7327ECCC1CE3122D00092D85 /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
 		7327ECCD1CE3122D00092D85 /* SocketIOProxyClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketIOProxyClient.swift; sourceTree = "<group>"; };
 		7327ECE81CE3141400092D85 /* StorageUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageUtil.swift; sourceTree = "<group>"; };
+		C3567E401CE430D4007F1216 /* Socket.io-pushTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Socket.io-pushTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3567E441CE430D4007F1216 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C3567E4A1CE4311B007F1216 /* Socket_io_pushTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket_io_pushTests.swift; sourceTree = "<group>"; };
 		C364EA921CE1E3B00074FDCC /* Socket.io-push.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Socket.io-push.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C364EAA61CE1E3B10074FDCC /* Socket.io-pushTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Socket.io-pushTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		C364EA8F1CE1E3B00074FDCC /* Frameworks */ = {
+		C3567E3D1CE430D4007F1216 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C364EAA31CE1E3B10074FDCC /* Frameworks */ = {
+		C364EA8F1CE1E3B00074FDCC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -153,11 +156,22 @@
 			path = SocketIOClientSwift;
 			sourceTree = "<group>";
 		};
+		C3567E411CE430D4007F1216 /* socket.io-pushTests */ = {
+			isa = PBXGroup;
+			children = (
+				C3567E4A1CE4311B007F1216 /* Socket_io_pushTests.swift */,
+				C3567E441CE430D4007F1216 /* Info.plist */,
+			);
+			name = "socket.io-pushTests";
+			path = "Socket.io-pushTests";
+			sourceTree = "<group>";
+		};
 		C364EA891CE1E3B00074FDCC = {
 			isa = PBXGroup;
 			children = (
 				7327ECB61CE3122D00092D85 /* source */,
 				7327ECA31CE3122600092D85 /* socket.io-push */,
+				C3567E411CE430D4007F1216 /* socket.io-pushTests */,
 				C364EA931CE1E3B00074FDCC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -166,7 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				C364EA921CE1E3B00074FDCC /* Socket.io-push.app */,
-				C364EAA61CE1E3B10074FDCC /* Socket.io-pushTests.xctest */,
+				C3567E401CE430D4007F1216 /* Socket.io-pushTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -174,6 +188,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		C3567E3F1CE430D4007F1216 /* Socket.io-pushTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C3567E471CE430D4007F1216 /* Build configuration list for PBXNativeTarget "Socket.io-pushTests" */;
+			buildPhases = (
+				C3567E3C1CE430D4007F1216 /* Sources */,
+				C3567E3D1CE430D4007F1216 /* Frameworks */,
+				C3567E3E1CE430D4007F1216 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C3567E461CE430D4007F1216 /* PBXTargetDependency */,
+			);
+			name = "Socket.io-pushTests";
+			productName = "Socket.io-pushTests";
+			productReference = C3567E401CE430D4007F1216 /* Socket.io-pushTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		C364EA911CE1E3B00074FDCC /* Socket.io-push */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C364EAAF1CE1E3B10074FDCC /* Build configuration list for PBXNativeTarget "Socket.io-push" */;
@@ -191,24 +223,6 @@
 			productReference = C364EA921CE1E3B00074FDCC /* Socket.io-push.app */;
 			productType = "com.apple.product-type.application";
 		};
-		C364EAA51CE1E3B10074FDCC /* Socket.io-pushTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C364EAB21CE1E3B10074FDCC /* Build configuration list for PBXNativeTarget "Socket.io-pushTests" */;
-			buildPhases = (
-				C364EAA21CE1E3B10074FDCC /* Sources */,
-				C364EAA31CE1E3B10074FDCC /* Frameworks */,
-				C364EAA41CE1E3B10074FDCC /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C364EAA81CE1E3B10074FDCC /* PBXTargetDependency */,
-			);
-			name = "Socket.io-pushTests";
-			productName = "Socket.io-pushTests";
-			productReference = C364EAA61CE1E3B10074FDCC /* Socket.io-pushTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -219,12 +233,12 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = Gocy;
 				TargetAttributes = {
-					C364EA911CE1E3B00074FDCC = {
-						CreatedOnToolsVersion = 7.3;
-					};
-					C364EAA51CE1E3B10074FDCC = {
+					C3567E3F1CE430D4007F1216 = {
 						CreatedOnToolsVersion = 7.3;
 						TestTargetID = C364EA911CE1E3B00074FDCC;
+					};
+					C364EA911CE1E3B00074FDCC = {
+						CreatedOnToolsVersion = 7.3;
 					};
 				};
 			};
@@ -242,12 +256,19 @@
 			projectRoot = "";
 			targets = (
 				C364EA911CE1E3B00074FDCC /* Socket.io-push */,
-				C364EAA51CE1E3B10074FDCC /* Socket.io-pushTests */,
+				C3567E3F1CE430D4007F1216 /* Socket.io-pushTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		C3567E3E1CE430D4007F1216 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C364EA901CE1E3B00074FDCC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -259,16 +280,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C364EAA41CE1E3B10074FDCC /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		C3567E3C1CE430D4007F1216 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3567E4C1CE43133007F1216 /* Socket_io_pushTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C364EA8E1CE1E3B00074FDCC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -301,20 +323,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C364EAA21CE1E3B10074FDCC /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C364EAA81CE1E3B10074FDCC /* PBXTargetDependency */ = {
+		C3567E461CE430D4007F1216 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C364EA911CE1E3B00074FDCC /* Socket.io-push */;
-			targetProxy = C364EAA71CE1E3B10074FDCC /* PBXContainerItemProxy */;
+			targetProxy = C3567E451CE430D4007F1216 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -338,6 +353,30 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		C3567E481CE430D4007F1216 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "Socket.io-pushTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xuduo.Socket-io-pushTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Socket.io-push.app/Socket.io-push";
+			};
+			name = Debug;
+		};
+		C3567E491CE430D4007F1216 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "Socket.io-pushTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xuduo.Socket-io-pushTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Socket.io-push.app/Socket.io-push";
+			};
+			name = Release;
+		};
 		C364EAAD1CE1E3B10074FDCC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -447,33 +486,18 @@
 			};
 			name = Release;
 		};
-		C364EAB31CE1E3B10074FDCC /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = "Socket.io-pushTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.xuduo.Socket-io-pushTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Socket.io-push.app/Socket.io-push";
-			};
-			name = Debug;
-		};
-		C364EAB41CE1E3B10074FDCC /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = "Socket.io-pushTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.xuduo.Socket-io-pushTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Socket.io-push.app/Socket.io-push";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		C3567E471CE430D4007F1216 /* Build configuration list for PBXNativeTarget "Socket.io-pushTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3567E481CE430D4007F1216 /* Debug */,
+				C3567E491CE430D4007F1216 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C364EA8D1CE1E3B00074FDCC /* Build configuration list for PBXProject "socket.io-push" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -488,15 +512,6 @@
 			buildConfigurations = (
 				C364EAB01CE1E3B10074FDCC /* Debug */,
 				C364EAB11CE1E3B10074FDCC /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C364EAB21CE1E3B10074FDCC /* Build configuration list for PBXNativeTarget "Socket.io-pushTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C364EAB31CE1E3B10074FDCC /* Debug */,
-				C364EAB41CE1E3B10074FDCC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

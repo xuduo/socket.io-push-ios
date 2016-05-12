@@ -1,4 +1,11 @@
 //
+//  Socket_io_pushTests.swift
+//  Socket.io-pushTests
+//
+//  Created by 蔡阳 on 16/5/12.
+//  Copyright © 2016年 Gocy. All rights reserved.
+//
+//
 //  misakaDemoTests.swift
 //  misakaDemoTests
 //
@@ -9,7 +16,7 @@
 import XCTest
 @testable import Socket_io_push
 
-class misakaDemoTests: XCTestCase ,PushCallback ,ConnectCallback{
+class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
     
     
     var socketIOClient : SocketIOProxyClient!
@@ -30,7 +37,7 @@ class misakaDemoTests: XCTestCase ,PushCallback ,ConnectCallback{
         socketIOClient.connectCallback = self
         let pushId = PushIdGeneratorBase().generatePushId()
         socketIOClient.setPushId(pushId)
-        socketIOClient.subscribeBroadcast("chatRoom",receiveTtl :.Receive)
+        socketIOClient.subscribeBroadcast("chatRoom")
         
     }
     

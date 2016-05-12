@@ -17,7 +17,7 @@
                BlueprintIdentifier = "C364EA911CE1E3B00074FDCC"
                BuildableName = "Socket.io-push.app"
                BlueprintName = "Socket.io-push"
-               ReferencedContainer = "container:Socket.io-push.xcodeproj">
+               ReferencedContainer = "container:socket.io-push.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C364EAA51CE1E3B10074FDCC"
+               BlueprintIdentifier = "C3567E3F1CE430D4007F1216"
                BuildableName = "Socket.io-pushTests.xctest"
                BlueprintName = "Socket.io-pushTests"
-               ReferencedContainer = "container:Socket.io-push.xcodeproj">
+               ReferencedContainer = "container:socket.io-push.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -45,7 +45,7 @@
             BlueprintIdentifier = "C364EA911CE1E3B00074FDCC"
             BuildableName = "Socket.io-push.app"
             BlueprintName = "Socket.io-push"
-            ReferencedContainer = "container:Socket.io-push.xcodeproj">
+            ReferencedContainer = "container:socket.io-push.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -68,7 +68,7 @@
             BlueprintIdentifier = "C364EA911CE1E3B00074FDCC"
             BuildableName = "Socket.io-push.app"
             BlueprintName = "Socket.io-push"
-            ReferencedContainer = "container:Socket.io-push.xcodeproj">
+            ReferencedContainer = "container:socket.io-push.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -87,7 +87,7 @@
             BlueprintIdentifier = "C364EA911CE1E3B00074FDCC"
             BuildableName = "Socket.io-push.app"
             BlueprintName = "Socket.io-push"
-            ReferencedContainer = "container:Socket.io-push.xcodeproj">
+            ReferencedContainer = "container:socket.io-push.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
