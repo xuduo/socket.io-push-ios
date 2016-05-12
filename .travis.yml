@@ -3,4 +3,4 @@ osx_image: xcode7.3
 xcode_project: socket.io-push.xcodeproj
 xcode_scheme: Socket.io-push
 xcode_sdk: iphonesimulator9.3
-xctool -project socket.io-push.xcodeproj -scheme Socket.io-push
+script: xctool -project socket.io-push.xcodeproj -scheme Socket.io-push
