@@ -36,11 +36,11 @@
 		7327ECE11CE3122D00092D85 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECCC1CE3122D00092D85 /* WebSocket.swift */; };
 		7327ECE21CE3122D00092D85 /* SocketIOProxyClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECCD1CE3122D00092D85 /* SocketIOProxyClient.swift */; };
 		7327ECE91CE3141400092D85 /* StorageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECE81CE3141400092D85 /* StorageUtil.swift */; };
-		C3567E611CE4584A007F1216 /* Socket_io_push_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3567E601CE4584A007F1216 /* Socket_io_push_tests.swift */; };
+		C3567E691CE458C9007F1216 /* Socket_io_push_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3567E681CE458C9007F1216 /* Socket_io_push_tests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C3567E5B1CE4582C007F1216 /* PBXContainerItemProxy */ = {
+		C3567E6B1CE458C9007F1216 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C364EA8A1CE1E3B00074FDCC /* Project object */;
 			proxyType = 1;
@@ -80,14 +80,14 @@
 		7327ECCC1CE3122D00092D85 /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
 		7327ECCD1CE3122D00092D85 /* SocketIOProxyClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketIOProxyClient.swift; sourceTree = "<group>"; };
 		7327ECE81CE3141400092D85 /* StorageUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageUtil.swift; sourceTree = "<group>"; };
-		C3567E561CE4582C007F1216 /* Socket.io-push-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Socket.io-push-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C3567E5A1CE4582C007F1216 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C3567E601CE4584A007F1216 /* Socket_io_push_tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket_io_push_tests.swift; sourceTree = "<group>"; };
+		C3567E661CE458C9007F1216 /* socket.io-push-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "socket.io-push-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3567E681CE458C9007F1216 /* Socket_io_push_tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Socket_io_push_tests.swift; sourceTree = "<group>"; };
+		C3567E6A1CE458C9007F1216 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C364EA921CE1E3B00074FDCC /* Socket.io-push.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Socket.io-push.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		C3567E531CE4582C007F1216 /* Frameworks */ = {
+		C3567E631CE458C9007F1216 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -156,13 +156,13 @@
 			path = SocketIOClientSwift;
 			sourceTree = "<group>";
 		};
-		C3567E571CE4582C007F1216 /* Socket.io-push-tests */ = {
+		C3567E671CE458C9007F1216 /* socket.io-push-tests */ = {
 			isa = PBXGroup;
 			children = (
-				C3567E601CE4584A007F1216 /* Socket_io_push_tests.swift */,
-				C3567E5A1CE4582C007F1216 /* Info.plist */,
+				C3567E681CE458C9007F1216 /* Socket_io_push_tests.swift */,
+				C3567E6A1CE458C9007F1216 /* Info.plist */,
 			);
-			path = "Socket.io-push-tests";
+			path = "socket.io-push-tests";
 			sourceTree = "<group>";
 		};
 		C364EA891CE1E3B00074FDCC = {
@@ -170,7 +170,7 @@
 			children = (
 				7327ECB61CE3122D00092D85 /* source */,
 				7327ECA31CE3122600092D85 /* socket.io-push */,
-				C3567E571CE4582C007F1216 /* Socket.io-push-tests */,
+				C3567E671CE458C9007F1216 /* socket.io-push-tests */,
 				C364EA931CE1E3B00074FDCC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -179,7 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				C364EA921CE1E3B00074FDCC /* Socket.io-push.app */,
-				C3567E561CE4582C007F1216 /* Socket.io-push-tests.xctest */,
+				C3567E661CE458C9007F1216 /* socket.io-push-tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -187,22 +187,22 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C3567E551CE4582C007F1216 /* Socket.io-push-tests */ = {
+		C3567E651CE458C9007F1216 /* socket.io-push-tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C3567E5D1CE4582C007F1216 /* Build configuration list for PBXNativeTarget "Socket.io-push-tests" */;
+			buildConfigurationList = C3567E6D1CE458C9007F1216 /* Build configuration list for PBXNativeTarget "socket.io-push-tests" */;
 			buildPhases = (
-				C3567E521CE4582C007F1216 /* Sources */,
-				C3567E531CE4582C007F1216 /* Frameworks */,
-				C3567E541CE4582C007F1216 /* Resources */,
+				C3567E621CE458C9007F1216 /* Sources */,
+				C3567E631CE458C9007F1216 /* Frameworks */,
+				C3567E641CE458C9007F1216 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				C3567E5C1CE4582C007F1216 /* PBXTargetDependency */,
+				C3567E6C1CE458C9007F1216 /* PBXTargetDependency */,
 			);
-			name = "Socket.io-push-tests";
-			productName = "Socket.io-push-tests";
-			productReference = C3567E561CE4582C007F1216 /* Socket.io-push-tests.xctest */;
+			name = "socket.io-push-tests";
+			productName = "socket.io-push-tests";
+			productReference = C3567E661CE458C9007F1216 /* socket.io-push-tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		C364EA911CE1E3B00074FDCC /* Socket.io-push */ = {
@@ -232,7 +232,7 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = Gocy;
 				TargetAttributes = {
-					C3567E551CE4582C007F1216 = {
+					C3567E651CE458C9007F1216 = {
 						CreatedOnToolsVersion = 7.3;
 						TestTargetID = C364EA911CE1E3B00074FDCC;
 					};
@@ -255,13 +255,13 @@
 			projectRoot = "";
 			targets = (
 				C364EA911CE1E3B00074FDCC /* Socket.io-push */,
-				C3567E551CE4582C007F1216 /* Socket.io-push-tests */,
+				C3567E651CE458C9007F1216 /* socket.io-push-tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		C3567E541CE4582C007F1216 /* Resources */ = {
+		C3567E641CE458C9007F1216 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -282,11 +282,11 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		C3567E521CE4582C007F1216 /* Sources */ = {
+		C3567E621CE458C9007F1216 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3567E611CE4584A007F1216 /* Socket_io_push_tests.swift in Sources */,
+				C3567E691CE458C9007F1216 /* Socket_io_push_tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,10 +325,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C3567E5C1CE4582C007F1216 /* PBXTargetDependency */ = {
+		C3567E6C1CE458C9007F1216 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C364EA911CE1E3B00074FDCC /* Socket.io-push */;
-			targetProxy = C3567E5B1CE4582C007F1216 /* PBXContainerItemProxy */;
+			targetProxy = C3567E6B1CE458C9007F1216 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -352,25 +352,25 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		C3567E5E1CE4582C007F1216 /* Debug */ = {
+		C3567E6E1CE458C9007F1216 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = "Socket.io-push-tests/Info.plist";
+				INFOPLIST_FILE = "socket.io-push-tests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.xuduo.Socket-io-push-tests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xuduo.socket-io-push-tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Socket.io-push.app/Socket.io-push";
 			};
 			name = Debug;
 		};
-		C3567E5F1CE4582C007F1216 /* Release */ = {
+		C3567E6F1CE458C9007F1216 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = "Socket.io-push-tests/Info.plist";
+				INFOPLIST_FILE = "socket.io-push-tests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.xuduo.Socket-io-push-tests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xuduo.socket-io-push-tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Socket.io-push.app/Socket.io-push";
 			};
@@ -488,11 +488,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C3567E5D1CE4582C007F1216 /* Build configuration list for PBXNativeTarget "Socket.io-push-tests" */ = {
+		C3567E6D1CE458C9007F1216 /* Build configuration list for PBXNativeTarget "socket.io-push-tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C3567E5E1CE4582C007F1216 /* Debug */,
-				C3567E5F1CE4582C007F1216 /* Release */,
+				C3567E6E1CE458C9007F1216 /* Debug */,
+				C3567E6F1CE458C9007F1216 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

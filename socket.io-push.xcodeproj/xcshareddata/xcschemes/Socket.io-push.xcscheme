@@ -48,6 +48,16 @@
                ReferencedContainer = "container:socket.io-push.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C3567E651CE458C9007F1216"
+               BuildableName = "socket.io-push-tests.xctest"
+               BlueprintName = "socket.io-push-tests"
+               ReferencedContainer = "container:socket.io-push.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
