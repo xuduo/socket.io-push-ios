@@ -32,10 +32,6 @@ class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
         
-        socketIOClient = SocketIOProxyClient(host:host)
-        socketIOClient.pushCallback = self
-        socketIOClient.connectCallback = self
-        socketIOClient.subscribeBroadcast("chatRoom")
         
     }
     
@@ -51,7 +47,14 @@ class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
         expectation = self.expectationWithDescription("Async request")
         
         
+        socketIOClient = SocketIOProxyClient(host:host)
+        socketIOClient.pushCallback = self
+        socketIOClient.connectCallback = self
+        
+        
         self.waitForExpectationsWithTimeout(10, handler: nil)
+        socketIOClient.subscribeBroadcast("chatRoom")
+        
     }
 
     
