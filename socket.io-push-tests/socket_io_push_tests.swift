@@ -57,8 +57,7 @@ class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
         
     }
 
-    
-    func onPush(topic: String, data: NSData?) {
+    func onPush(data: NSData?) {
         guard let hasData = data else{
             NSLog("on Push , data equals nil")
             return
@@ -81,8 +80,8 @@ class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
         XCTAssertTrue(self.chatDic!.isEqualToDictionary(dataDic! as Dictionary<NSObject,AnyObject>), "Equal")
         
         expectation?.fulfill()
+
     }
-    
     func onConnect(uid: String) {
         self.sendChat("This is a test message")
     }

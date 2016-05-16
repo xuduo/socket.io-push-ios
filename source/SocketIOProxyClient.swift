@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 @objc public protocol PushCallback {
-    func onPush(topic : String, data : NSData?)
+    func onPush(data : NSData?)
 }
 
 @objc public protocol LogCallback {
@@ -173,7 +173,7 @@ public class SocketIOProxyClient : NSObject {
             data.setValue("apn", forKey: "type")
             data.setValue(NSBundle.mainBundle().bundleIdentifier, forKey: "bundleId")
             self.socket!.emit("apnToken", data)
-            log("info",format: "send apnToken to server")
+            log("info",format: "send ApnToken to server")
         }
     }
     
@@ -203,7 +203,6 @@ public class SocketIOProxyClient : NSObject {
     private func handlePush(data:[AnyObject] ,ack:SocketAckEmitter){
         var values = data[0] as! Dictionary<String, AnyObject>
         
-        let topic = values["t"] as? String ?? values["topic"] as? String
         
         var binary = NSData();
         let dataBase64 = values["d"] as? String ?? values["data"] as? String
@@ -222,12 +221,10 @@ public class SocketIOProxyClient : NSObject {
             }
         }
         
+        updateLastPacketId(nil, data: data)
         
-        updateLastPacketId(topic!, data: data)
-        
-        
-        self.pushCallback?.onPush(topic!, data: binary)
-        log("info", format: "server push with topic = %@ , data = %@ ", args: topic! ,data )
+        self.pushCallback?.onPush(binary)
+        log("info", format: "server push with data = %@ " ,args :data )
     }
     
     

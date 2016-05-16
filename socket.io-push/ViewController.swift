@@ -96,7 +96,7 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
         self.navigationItem.title = "disconnected"
     }
     
-    func onPush(topic: String, data: NSData?) {
+    func onPush(data: NSData?) {
         
         //        print("ViewController %@ %@",topic, String(data:data!, encoding: NSUTF8StringEncoding));
         
