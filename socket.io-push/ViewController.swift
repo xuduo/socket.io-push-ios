@@ -139,7 +139,6 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
         let chatDic = [
             "nickName" : self.userName,
             "message" : message,
-            "color": -16776961,
             "type" : msgType
         ]
         
