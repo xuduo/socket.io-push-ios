@@ -11,7 +11,11 @@ import UIKit
 
 @objc public protocol PushCallback {
     func onPush(topic : String, data : NSData?)
-//    func loge(level:String,format:String,args:va_list)
+}
+
+@objc public protocol LogCallback {
+optional
+    func log(level:String ,message:String)
 }
 
 @objc public protocol ConnectCallback {
@@ -40,14 +44,17 @@ public class SocketIOProxyClient : NSObject {
     
     private let lastUnicastId = "lastUnicastId"
     
-    public var pushCallback:PushCallback?
-    public var connectCallback:ConnectCallback?
+    public weak var pushCallback:PushCallback?
+    public weak var connectCallback:ConnectCallback?
+    public weak var logCallback :LogCallback?
     private var socket:SocketIOClient?
     private var pushId:String?
     private var apnToken:String?
     private var connected = false
     private var broadcastTopicsMap = Dictionary<String ,TTLReceiveType>()
     private var topicToLastPacketId = Dictionary<String ,String>()
+    
+    
     
     public init(host:String){
         super.init()
@@ -137,8 +144,11 @@ public class SocketIOProxyClient : NSObject {
         broadcastTopicsMap[topic] = receiveTtl
         if (connected) {
             self.socket!.emit("subscribeTopic", ["topic": topic])
+            let receiveStr = receiveTtl == .Receive ? "true":"false"
+            log("info", format: "subscribe topic : %@ , receive ttl : %@", args: topic , receiveStr)
         }
     }
+    
     
     public func subscribeBroadcast(topic:String){
         self.subscribeBroadcast(topic, receiveTtl: TTLReceiveType.DoNotReceive);
@@ -163,7 +173,7 @@ public class SocketIOProxyClient : NSObject {
             data.setValue("apn", forKey: "type")
             data.setValue(NSBundle.mainBundle().bundleIdentifier, forKey: "bundleId")
             self.socket!.emit("apnToken", data)
-            print("send apnToken \(apnToken)")
+            log("info",format: "send apnToken to server")
         }
     }
     
@@ -177,6 +187,7 @@ public class SocketIOProxyClient : NSObject {
                 data.setValue(Array(broadcastTopicsMap.keys), forKey: "topics")
             }
             self.socket!.emit("pushId", data)
+            log("info", format: "send pushId and topic to server")
         }
     }
     
@@ -192,24 +203,20 @@ public class SocketIOProxyClient : NSObject {
     private func handlePush(data:[AnyObject] ,ack:SocketAckEmitter){
         var values = data[0] as! Dictionary<String, AnyObject>
         
-        var topic = values["t"] as? String
-        if(topic == nil){
-            topic = values["topic"] as? String
-        }
+        let topic = values["t"] as? String ?? values["topic"] as? String
+        
         var binary = NSData();
-        var dataBase64 = values["data"] as? String
-        if( dataBase64 == nil){
-            dataBase64 = values["d"] as? String
-        }
+        let dataBase64 = values["d"] as? String ?? values["data"] as? String
+        
         if(dataBase64 != nil){
             binary = NSData(base64EncodedString: dataBase64!, options: NSDataBase64DecodingOptions(rawValue: 0))!;
         } else {
-            let json = values["j"];
-            if( json != nil){
+            if let json = values["j"]{
                 do {
-                    binary = try NSJSONSerialization.dataWithJSONObject(json!, options: NSJSONWritingOptions.init(rawValue: 0))
+                    binary = try NSJSONSerialization.dataWithJSONObject(json, options: NSJSONWritingOptions.init(rawValue: 0))
                 } catch let myJSONError {
-                    print("parse json error %s", myJSONError)
+//                    print("parse json error %s", myJSONError)
+                    log("error", format: "parse json error %@", args: String(myJSONError))
                     return;
                 }
             }
@@ -218,9 +225,9 @@ public class SocketIOProxyClient : NSObject {
         
         updateLastPacketId(topic!, data: data)
         
-        if (nil != self.pushCallback) {
-            self.pushCallback?.onPush(topic!, data: binary)
-        }
+        
+        self.pushCallback?.onPush(topic!, data: binary)
+        log("info", format: "server push with topic = %@ , data = %@ ", args: topic! ,data )
     }
     
     
@@ -236,6 +243,7 @@ public class SocketIOProxyClient : NSObject {
         let unicast : String! = values["unicast"] as? String ?? values["u"] as? String
         
         if(id != nil && ttl != nil){
+            log("info", format: "update last packetId : on push topic = %@ , pushId = %@", args:topic,id )
             if unicast != nil{
                 StorageUtil.sharedInstance().setItem(id, forKey: lastUnicastId)
             }else if topic != nil && broadcastTopicsMap[topic] != nil && broadcastTopicsMap[topic] == .Receive{
@@ -244,5 +252,20 @@ public class SocketIOProxyClient : NSObject {
         }
         
     }
+    
+
+    func log(level:String ,format:String ,args:CVarArgType...){
+        
+        let formatStr = String(format: format, arguments: args)
+        
+        if let callbackLog = self.logCallback?.log {
+            callbackLog(level, message: formatStr)
+        }else{
+            NSLog("SocketIOProxyClient Log:\(level),\(formatStr)")
+        }
+        
+    }
+    
+    
     
 }

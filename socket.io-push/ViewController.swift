@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController,ConnectCallback,PushCallback/*,PushCallbackDelegate*/{
+class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
     
     let url = "http://spush.yy.com/api/push?pushAll=true&topic=chatRoom&json=%@&timeToLive="
     
@@ -37,6 +37,7 @@ class ViewController: UIViewController,ConnectCallback,PushCallback/*,PushCallba
         socketIOClient = (UIApplication.sharedApplication().delegate as! AppDelegate).socketIOClient
         socketIOClient.pushCallback = self
         socketIOClient.connectCallback = self
+        socketIOClient.logCallback = self
         let pushId = PushIdGeneratorBase().generatePushId()
         socketIOClient.setPushId(pushId)
         socketIOClient.subscribeBroadcast("chatRoom")
@@ -82,9 +83,8 @@ class ViewController: UIViewController,ConnectCallback,PushCallback/*,PushCallba
         self.tapView?.frame = self.chatTableView.frame
     }
     
-    //    func loge(level: String, format: String, args:va_list) {
-    //        print("oc client log " + format,args);
-    //    }
+    
+    //MARK: - PushCallback & Connect Callback
     
     func onConnect(uid:String){
         print("onConnect \(uid)");
@@ -116,12 +116,11 @@ class ViewController: UIViewController,ConnectCallback,PushCallback/*,PushCallba
         
     }
     
-    //MARK: - Helpers
-    
-    @IBAction func onClear(sender: AnyObject) {
-        socketIOClient.request("/clear",data:nil)
-        lastTimestamp = NSDate()
+    func log(level: String, message: String) {
+        NSLog("Level : \(level) , message : \(message)")
     }
+    
+    //MARK: - Helpers
     
     func registerKeyboardNotifications(){
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillChange), name: UIKeyboardWillChangeFrameNotification, object: nil)
@@ -181,7 +180,7 @@ class ViewController: UIViewController,ConnectCallback,PushCallback/*,PushCallba
             chatInfo.nickName = dataDic["nickName"] as? String
             chatInfo.message = dataDic["message"] as? String
             chatInfo.color = (dataDic["color"] as? NSNumber)!.integerValue
-            NSLog("\(chatInfo.message)")
+            
             if chats == nil {
                 chats = [ChatInfo]()
             }
@@ -238,7 +237,7 @@ extension ViewController:UITableViewDataSource{
     }
 }
 
-//MARK: -TableView Delegate
+//MARK: - TableView Delegate
 extension ViewController:UITableViewDelegate{
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
