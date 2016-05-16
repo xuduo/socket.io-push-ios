@@ -13,5 +13,5 @@ class ChatInfo: NSObject {
     
     var nickName : String!
     var message: String!
-    var color : NSInteger = 0
+    var type : String!
 }

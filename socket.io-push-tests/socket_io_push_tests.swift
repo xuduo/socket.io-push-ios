@@ -23,6 +23,7 @@ class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
     let url = "http://spush.yy.com/api/push?pushId=%@&topic=chatRoom&json=%@&timeToLive="
     let host = "http://spush.yy.com"
     
+    private let expectedType = "chat_message"
     
     var chatDic : NSDictionary?
     
@@ -94,10 +95,10 @@ class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
         
         let message = msg == nil ? "" : msg!
         
-        let chatDic = [
+        let chatDic : NSDictionary = [
             "nickName" : "Socket-io test",
             "message" : message,
-            "color": -16776961
+            "type" : expectedType
         ]
         
         self.chatDic = chatDic.copy() as? NSDictionary

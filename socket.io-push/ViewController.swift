@@ -15,6 +15,8 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
     private var socketIOClient:SocketIOProxyClient! 
     private var lastTimestamp = NSDate()
     
+    private let msgType = "chat_message"
+    
     @IBOutlet weak var textFieldBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var chatTextField: UITextField!
     @IBOutlet weak var chatTableView: UITableView!
@@ -137,7 +139,8 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
         let chatDic = [
             "nickName" : self.userName,
             "message" : message,
-            "color": -16776961
+            "color": -16776961,
+            "type" : msgType
         ]
         
         var jsonData : NSData! = nil
@@ -173,13 +176,16 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
     
     
     func parseChatDic(dic:NSDictionary?){
-        if let dataDic = dic{
-            
+        if let dataDic = dic {
             
             let chatInfo = ChatInfo()
             chatInfo.nickName = dataDic["nickName"] as? String
             chatInfo.message = dataDic["message"] as? String
-            chatInfo.color = (dataDic["color"] as? NSNumber)!.integerValue
+            chatInfo.type = dataDic["type"] as? String
+            
+            if chatInfo.type != msgType {
+                return
+            }
             
             if chats == nil {
                 chats = [ChatInfo]()
