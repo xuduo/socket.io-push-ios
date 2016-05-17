@@ -124,8 +124,8 @@
 				7327ECB71CE3122D00092D85 /* misakaSwift.h */,
 				7327ECB81CE3122D00092D85 /* PushIdGeneratorBase.swift */,
 				7327ECE81CE3141400092D85 /* StorageUtil.swift */,
-				7327ECB91CE3122D00092D85 /* SocketIOClientSwift */,
 				7327ECCD1CE3122D00092D85 /* SocketIOProxyClient.swift */,
+				7327ECB91CE3122D00092D85 /* SocketIOClientSwift */,
 			);
 			path = source;
 			sourceTree = "<group>";
@@ -238,6 +238,12 @@
 					};
 					C364EA911CE1E3B00074FDCC = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = H4V332SS59;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -465,6 +471,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Socket.io-push/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -477,6 +484,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Socket.io-push/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -495,6 +503,7 @@
 				C3567E7D1CE45A5F007F1216 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C364EA8D1CE1E3B00074FDCC /* Build configuration list for PBXProject "socket.io-push" */ = {
 			isa = XCConfigurationList;
