@@ -20,14 +20,19 @@ class Socket_io_push_tests: XCTestCase ,PushCallback ,ConnectCallback{
     
     
     var socketIOClient : SocketIOProxyClient!
-    let url = "http://spush.yy.com/api/push?pushId=%@&topic=chatRoom&json=%@&timeToLive="
+    let chatRoomUrl = "http://spush.yy.com/api/push?pushId=%@&topic=chatRoom&json=%@&timeToLive=10000"
+    let messageUrl = "http://spush.yy.com/api/push?pushId=%@&topic=message&json=%@"
     let host = "http://spush.yy.com"
     
     private let expectedType = "chat_message"
     
-    var chatDic : NSDictionary?
+    var lastPushDic : NSDictionary?
+    var lastPushArray : NSArray?
+    var lastPushString : String?
     
-    var expectation : XCTestExpectation?
+    var expectationForDic : XCTestExpectation?
+    var expectationForArr : XCTestExpectation?
+    var expectationForStr : XCTestExpectation?
     
     override func setUp() {
         super.setUp()
@@ -45,50 +50,65 @@ class Socket_io_push_tests: XCTestCase ,PushCallback ,ConnectCallback{
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         //        vc.sendChat("Chat From Test")
-        expectation = self.expectationWithDescription("Async request")
+        expectationForDic = self.expectationWithDescription("Async request for dic")
+//        expectationForArr = self.expectationWithDescription("Async request for arr")
+        expectationForStr = self.expectationWithDescription("Async request for str")
         
         
         socketIOClient = SocketIOProxyClient(host:host)
         socketIOClient.pushCallback = self
         socketIOClient.connectCallback = self
         
+        socketIOClient.subscribeBroadcast("chatRoom")
+        socketIOClient.subscribeBroadcast("message")
         
         self.waitForExpectationsWithTimeout(10, handler: nil)
-        socketIOClient.subscribeBroadcast("chatRoom")
-        
     }
 
-    func onPush(dataStr: String?) {
+    func onPush(dataStr: String) {
         
-        guard let data = dataStr?.dataUsingEncoding(NSUTF8StringEncoding)
+        if dataStr == self.lastPushString && self.lastPushString != nil {
+            NSLog("String test passed")
+            expectationForStr?.fulfill()
+            return
+        }
+        
+        guard let data = dataStr.dataUsingEncoding(NSUTF8StringEncoding)
             else{
                 XCTAssert(false, "data str encoding is not utf-8")
                 return
         }
         
         var dataDic : NSDictionary?
+        var dataArr : NSArray?
         do{
             dataDic = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSDictionary
+            dataArr = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSArray
         }catch _{
             
-            XCTAssert(false, "error parsing data dict")
+        }
+        
+        if dataDic != nil{
+            XCTAssertTrue(dataDic == self.lastPushDic, "received dic is not equal to last push dic")
+            NSLog("Dictionary test passed")
+            expectationForDic?.fulfill()
             return
         }
         
-        XCTAssertNotNil(self.chatDic != nil, "chatDic shouldn't be nil")
+        if dataArr != nil{
+            XCTAssertTrue(dataArr == self.lastPushArray, "received array is not equal to last push array")
+            NSLog("Array test passed")
+            expectationForArr?.fulfill()
+            return
+        }
         
-        XCTAssertNotNil(dataDic, "dataDic shouldn't be nil")
+        XCTAssertTrue(false, "received data doesn't match any pushed data")
         
-        NSLog("\nLogFromTest:\nChatDic:\(self.chatDic!),\nDataDic:\(dataDic!)")
-        
-        
-        XCTAssertTrue(self.chatDic!.isEqualToDictionary(dataDic! as Dictionary<NSObject,AnyObject>), "Equal")
-        
-        expectation?.fulfill()
-
     }
     func onConnect(uid: String) {
         self.sendChat("This is a test message")
+        self.sendString()
+        self.sendArray()
     }
     
     func onDisconnect() {
@@ -105,7 +125,7 @@ class Socket_io_push_tests: XCTestCase ,PushCallback ,ConnectCallback{
             "type" : expectedType
         ]
         
-        self.chatDic = chatDic.copy() as? NSDictionary
+        self.lastPushDic = chatDic.copy() as? NSDictionary
         
         var jsonData : NSData! = nil
         do{
@@ -125,15 +145,72 @@ class Socket_io_push_tests: XCTestCase ,PushCallback ,ConnectCallback{
             return
         }
         
-        let jsonUrl = String(format: url, socketIOClient.getPushId(), encodedStr)
+        let jsonUrl = String(format: chatRoomUrl, socketIOClient.getPushId(), encodedStr)
         
-        guard let reqUrl = NSURL(string: jsonUrl)  else{
+        sendToUrl(jsonUrl)
+    }
+    
+    func sendString(){
+        let testString = "this is a test String"
+        
+        self.lastPushString = testString
+        
+        let jsonString = "\"\(testString)\""
+        
+        let set : NSMutableCharacterSet = NSMutableCharacterSet.alphanumericCharacterSet()
+        
+        guard let encodedStr = jsonString.stringByAddingPercentEncodingWithAllowedCharacters(set) else{
+            return
+        }
+        
+        let jsonUrl = String(format: messageUrl, socketIOClient.getPushId(), encodedStr)
+        
+        sendToUrl(jsonUrl)
+        
+    }
+    
+    func sendArray(){
+        let arr = [1,"2",3]
+        
+        self.lastPushArray = arr as NSArray
+        
+        var jsonData : NSData! = nil
+        do{
+            
+            jsonData = try NSJSONSerialization.dataWithJSONObject(arr, options: .PrettyPrinted)
+        }catch _{
+            return
+        }
+        
+        guard let jsonStr = NSString(data: jsonData, encoding: NSUTF8StringEncoding) else{
+            return
+        }
+        
+        let set : NSMutableCharacterSet = NSMutableCharacterSet.alphanumericCharacterSet()
+        
+        guard let encodedStr = jsonStr.stringByAddingPercentEncodingWithAllowedCharacters(set) else{
+            return
+        }
+        
+        let jsonUrl = String(format: messageUrl, socketIOClient.getPushId(), encodedStr)
+        
+        sendToUrl(jsonUrl)
+
+    }
+    
+    func sendToUrl(url:String){
+        
+        guard let reqUrl = NSURL(string: url)  else{
             return
         }
         let urlReq = NSURLRequest(URL: reqUrl)
         
         let manager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-        let dataTask = manager.dataTaskWithRequest(urlReq)
+        let dataTask = manager.dataTaskWithRequest(urlReq){
+            data, response, error in
+            let dataStr = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            NSLog("url request : \(url) , data:\(dataStr)")
+        }
         
         dataTask.resume()
     }

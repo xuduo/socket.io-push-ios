@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 @objc public protocol PushCallback {
-    func onPush(data : String?)
+    func onPush(data : String)
 }
 
 @objc public protocol LogCallback {
@@ -200,56 +200,96 @@ public class SocketIOProxyClient : NSObject {
         return pushId!
     }
     
+    public func connect(){
+        socket?.connect()
+    }
+    
+    public func disconnect(){
+        socket?.disconnect()
+    }
+    
     private func handlePush(data:[AnyObject] ,ack:SocketAckEmitter){
-        var values = data[0] as! Dictionary<String, AnyObject>
-        
-        let dataStr = values["d"] as? String ?? values["data"] as? String
         
         var str : String?
-        
-        if(dataStr != nil){
-            str = dataStr
-        } else {
-            if let json = values["j"]{
-                var jsonStr : String?
-                var jsonData : NSData?
-                do{
-                    jsonData = try NSJSONSerialization.dataWithJSONObject(json, options: .PrettyPrinted)
-                }catch let parseError{
-                    log("error", format: "error parsing json data , error:%@", args: String(parseError))
+        if let values = data[0] as? Dictionary<String, AnyObject>{
+            let dataStr = values["d"] as? String ?? values["data"] as? String
+            
+            
+            if(dataStr != nil){
+                str = dataStr
+            } else {
+                if let json = values["j"]{
+                    var jsonStr : String?
+                    var jsonData : NSData?
+                    do{
+                        jsonData = try NSJSONSerialization.dataWithJSONObject(json, options: .PrettyPrinted)
+                    }catch let parseError{
+                        log("error", format: "error parsing json data , error:%@", args: String(parseError))
+                    }
+                    jsonStr = NSString(data: jsonData!, encoding: NSUTF8StringEncoding) as? String
+                    str = jsonStr
                 }
-                jsonStr = NSString(data: jsonData!, encoding: NSUTF8StringEncoding) as? String
-                str = jsonStr
             }
         }
         
-        self.pushCallback?.onPush(str)
+        if str == nil{
+            log("error", format: "server push data parse error")
+            return
+        }
+        
+        self.pushCallback?.onPush(str!)
         log("info", format: "server push with version1 data = %@ " ,args :data )
     }
     
     private func handleVersion2Push(data:[AnyObject] ,ack:SocketAckEmitter){
-        guard let dic = data[0] as? Dictionary<String,AnyObject> else{return}
-        
-        var d : NSData?
-        do{
-            d = try NSJSONSerialization.dataWithJSONObject(dic, options: .PrettyPrinted)
-        }catch let myJSONError {
+        var str : String?
+        if let values = data[0] as? Dictionary<String, AnyObject>{
             
-            log("error", format: "parse json error %@", args: String(myJSONError))
-            return;
+            
+            var jsonStr : String?
+            var jsonData : NSData?
+            do{
+                jsonData = try NSJSONSerialization.dataWithJSONObject(values, options: .PrettyPrinted)
+            }catch let parseError{
+                log("error", format: "error parsing json data , error:%@", args: String(parseError))
+            }
+            jsonStr = NSString(data: jsonData!, encoding: NSUTF8StringEncoding) as? String
+            str = jsonStr
+            
+            
+        }
+        else if let value = data[0] as? String{
+            str = value
+        }
+        else if let valueArr = data[0] as? NSArray{
+            var jsonData : NSData?
+            
+            do{
+                jsonData = try NSJSONSerialization.dataWithJSONObject(valueArr, options: .PrettyPrinted)
+            }catch let parseError{
+                log("error", format: "error parsing json data , error:%@", args: String(parseError))
+            }
+            str = NSString(data: jsonData!, encoding: NSUTF8StringEncoding) as? String
         }
         
-        guard let str = NSString(data: d!, encoding: NSUTF8StringEncoding) else {return}
+        if str == nil{
+            log("error", format: "server push data parse error")
+            return
+        }
+
         
-        log("info", format: "server push with version2 data = %@ " ,args :str )
+        log("info", format: "server push with version2 data = %@ " ,args :str! )
         
-        self.pushCallback?.onPush(str as String)
+        self.pushCallback?.onPush(str!)
         
         if data.count > 1 {
             if let ttl = data[1] as? NSArray{
                 updateLastPacketId(ttl[0] as? String, data: [["id":ttl[1], "unicast":ttl[2] ,"ttl" : 1]])
             }
         }
+        
+        
+        
         
     }
     

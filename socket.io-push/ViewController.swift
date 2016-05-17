@@ -134,9 +134,9 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
     }
     
     
-    func sendChat(msg:String?){
+    func sendChat(msg:String){
         
-        let message = msg == nil ? "" : msg!
+        let message = msg
         
         
         let chatDic = [
@@ -261,7 +261,7 @@ extension ViewController:UITextFieldDelegate{
         
         if textField == self.chatTextField{
             
-            sendChat(textField.text)
+            sendChat(textField.text!)
             
             textField.text = ""
         }
