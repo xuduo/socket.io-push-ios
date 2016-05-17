@@ -62,7 +62,7 @@ class Socket_io_push_tests: XCTestCase ,PushCallback ,ConnectCallback{
         socketIOClient.subscribeBroadcast("chatRoom")
         socketIOClient.subscribeBroadcast("message")
         
-        self.waitForExpectationsWithTimeout(15, handler: nil)
+        self.waitForExpectationsWithTimeout(150, handler: nil)
     }
 
     func onPush(dataStr: String) {
@@ -204,12 +204,12 @@ class Socket_io_push_tests: XCTestCase ,PushCallback ,ConnectCallback{
             return
         }
         let urlReq = NSURLRequest(URL: reqUrl)
-        
+        let wtf = "wtf from outside"
         let manager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         let dataTask = manager.dataTaskWithRequest(urlReq){
             data, response, error in
-            let dataStr = NSString(data: data!, encoding: NSUTF8StringEncoding)
-            NSLog("url request : \(url) , data:\(dataStr)")
+            let inner = url
+            NSLog("Hey \(manager)")
         }
         
         dataTask.resume()

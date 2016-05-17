@@ -98,7 +98,7 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
         self.navigationItem.title = "disconnected"
     }
     
-    func onPush(dataStr: String?) {
+    func onPush(dataStr: String) {
         
         //        print("ViewController %@ %@",topic, String(data:data!, encoding: NSUTF8StringEncoding));
 //        
@@ -107,7 +107,7 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
 //            return
 //        }
         
-        guard let data = dataStr?.dataUsingEncoding(NSUTF8StringEncoding) else{return}
+        guard let data = dataStr.dataUsingEncoding(NSUTF8StringEncoding) else{return}
         
         var dataDic : NSDictionary?
         do{

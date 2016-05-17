@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 @objc public protocol PushCallback {
-    func onPush(data : String)
+    func onPush(dataStr : String)
 }
 
 @objc public protocol LogCallback {
