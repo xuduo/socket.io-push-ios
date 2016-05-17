@@ -51,7 +51,7 @@ class Socket_io_push_tests: XCTestCase ,PushCallback ,ConnectCallback{
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         //        vc.sendChat("Chat From Test")
         expectationForDic = self.expectationWithDescription("Async request for dic")
-//        expectationForArr = self.expectationWithDescription("Async request for arr")
+        expectationForArr = self.expectationWithDescription("Async request for arr")
         expectationForStr = self.expectationWithDescription("Async request for str")
         
         
