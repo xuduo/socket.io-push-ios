@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 @objc public protocol PushCallback {
-    func onPush(data : NSData?)
+    func onPush(data : String?)
 }
 
 @objc public protocol LogCallback {
@@ -108,7 +108,7 @@ public class SocketIOProxyClient : NSObject {
         socket!.on("p"){
             [unowned self]
             data, ack in
-            self.handlePush(data, ack: ack)
+            self.handleVersion2Push(data, ack: ack)
         }
         socket!.connect()
     }
@@ -203,30 +203,55 @@ public class SocketIOProxyClient : NSObject {
     private func handlePush(data:[AnyObject] ,ack:SocketAckEmitter){
         var values = data[0] as! Dictionary<String, AnyObject>
         
+        let dataStr = values["d"] as? String ?? values["data"] as? String
         
-        var binary = NSData();
-        let dataBase64 = values["d"] as? String ?? values["data"] as? String
+        var str : String?
         
-        if(dataBase64 != nil){
-            binary = NSData(base64EncodedString: dataBase64!, options: NSDataBase64DecodingOptions(rawValue: 0))!;
+        if(dataStr != nil){
+            str = dataStr
         } else {
             if let json = values["j"]{
-                do {
-                    binary = try NSJSONSerialization.dataWithJSONObject(json, options: NSJSONWritingOptions.init(rawValue: 0))
-                } catch let myJSONError {
-//                    print("parse json error %s", myJSONError)
-                    log("error", format: "parse json error %@", args: String(myJSONError))
-                    return;
+                var jsonStr : String?
+                var jsonData : NSData?
+                do{
+                    jsonData = try NSJSONSerialization.dataWithJSONObject(json, options: .PrettyPrinted)
+                }catch let parseError{
+                    log("error", format: "error parsing json data , error:%@", args: String(parseError))
                 }
+                jsonStr = NSString(data: jsonData!, encoding: NSUTF8StringEncoding) as? String
+                str = jsonStr
             }
         }
         
-        updateLastPacketId(nil, data: data)
-        
-        self.pushCallback?.onPush(binary)
-        log("info", format: "server push with data = %@ " ,args :data )
+        self.pushCallback?.onPush(str)
+        log("info", format: "server push with version1 data = %@ " ,args :data )
     }
     
+    private func handleVersion2Push(data:[AnyObject] ,ack:SocketAckEmitter){
+        guard let dic = data[0] as? Dictionary<String,AnyObject> else{return}
+        
+        var d : NSData?
+        do{
+            d = try NSJSONSerialization.dataWithJSONObject(dic, options: .PrettyPrinted)
+        }catch let myJSONError {
+            
+            log("error", format: "parse json error %@", args: String(myJSONError))
+            return;
+        }
+        
+        guard let str = NSString(data: d!, encoding: NSUTF8StringEncoding) else {return}
+        
+        log("info", format: "server push with version2 data = %@ " ,args :str )
+        
+        self.pushCallback?.onPush(str as String)
+        
+        if data.count > 1 {
+            if let ttl = data[1] as? NSArray{
+                updateLastPacketId(ttl[0] as? String, data: [["id":ttl[1], "unicast":ttl[2] ,"ttl" : 1]])
+            }
+        }
+        
+    }
     
     func updateLastPacketId(topic:String! ,data:[AnyObject]){
         guard let values = data[0] as? Dictionary<String, AnyObject>
@@ -235,9 +260,9 @@ public class SocketIOProxyClient : NSObject {
         }
         let id : String! = values["id"] as? String ?? values["i"] as? String
       
-        let ttl : String! = values["ttl"] as? String ?? values["t"] as? String
+        let ttl : NSNumber? = values["ttl"] as? NSNumber ?? values["t"] as? NSNumber
         
-        let unicast : String! = values["unicast"] as? String ?? values["u"] as? String
+        let unicast : NSNumber? = values["unicast"] as? NSNumber ?? values["u"] as? NSNumber
         
         if(id != nil && ttl != nil){
             log("info", format: "update last packetId : on push topic = %@ , pushId = %@", args:topic,id )

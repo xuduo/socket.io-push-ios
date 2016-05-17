@@ -98,23 +98,26 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
         self.navigationItem.title = "disconnected"
     }
     
-    func onPush(data: NSData?) {
+    func onPush(dataStr: String?) {
         
         //        print("ViewController %@ %@",topic, String(data:data!, encoding: NSUTF8StringEncoding));
+//        
+//        guard let hasData = data else{
+//            NSLog("on Push , data equals nil")
+//            return
+//        }
         
-        guard let hasData = data else{
-            NSLog("on Push , data equals nil")
-            return
-        }
+        guard let data = dataStr?.dataUsingEncoding(NSUTF8StringEncoding) else{return}
         
         var dataDic : NSDictionary?
         do{
-            dataDic = try NSJSONSerialization.JSONObjectWithData(hasData, options: .AllowFragments) as? NSDictionary
+            dataDic = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSDictionary
         }catch _{
             return
         }
         
         self.parseChatDic(dataDic)
+
         
     }
     

@@ -16,8 +16,9 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
     public var socketIOClient:SocketIOProxyClient!
     // public var socketIOClientOc:SocketIOProxyClientOC!
     
+    
     public func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        let url = "http://spush.yy.com";
+        let url = "http://spush.yy.com"
         
         socketIOClient = SocketIOProxyClient.init(host: url)
         

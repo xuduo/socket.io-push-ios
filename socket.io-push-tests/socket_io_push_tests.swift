@@ -1,6 +1,6 @@
 //
-//  Socket_io_pushTests.swift
-//  Socket.io-pushTests
+//  Socket_io_push_tests.swift
+//  Socket.io-push_tests
 //
 //  Created by 蔡阳 on 16/5/12.
 //  Copyright © 2016年 Gocy. All rights reserved.
@@ -16,7 +16,7 @@
 import XCTest
 @testable import Socket_io_push
 
-class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
+class Socket_io_push_tests: XCTestCase ,PushCallback ,ConnectCallback{
     
     
     var socketIOClient : SocketIOProxyClient!
@@ -58,16 +58,20 @@ class Socket_io_pushTests: XCTestCase ,PushCallback ,ConnectCallback{
         
     }
 
-    func onPush(data: NSData?) {
-        guard let hasData = data else{
-            NSLog("on Push , data equals nil")
-            return
+    func onPush(dataStr: String?) {
+        
+        guard let data = dataStr?.dataUsingEncoding(NSUTF8StringEncoding)
+            else{
+                XCTAssert(false, "data str encoding is not utf-8")
+                return
         }
         
         var dataDic : NSDictionary?
         do{
-            dataDic = try NSJSONSerialization.JSONObjectWithData(hasData, options: .AllowFragments) as? NSDictionary
+            dataDic = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSDictionary
         }catch _{
+            
+            XCTAssert(false, "error parsing data dict")
             return
         }
         
