@@ -62,7 +62,7 @@ class Socket_io_push_tests: XCTestCase ,PushCallback ,ConnectCallback{
         socketIOClient.subscribeBroadcast("chatRoom")
         socketIOClient.subscribeBroadcast("message")
         
-        self.waitForExpectationsWithTimeout(10, handler: nil)
+        self.waitForExpectationsWithTimeout(15, handler: nil)
     }
 
     func onPush(dataStr: String) {
