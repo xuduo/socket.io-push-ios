@@ -181,7 +181,6 @@ public class SocketIOProxyClient : NSObject {
         if (pushId != nil && connected) {
             let data = NSMutableDictionary()
             data.setValue(pushId, forKey: "id")
-            data.setValue(1, forKey: "version")
             data.setValue("ios", forKey: "platform")
             
             if let unicastId = StorageUtil.sharedInstance().getItem("PushClient:\(getPushId())" + self.lastUnicastId){
@@ -312,11 +311,16 @@ public class SocketIOProxyClient : NSObject {
         let unicast : NSNumber? = values["unicast"] as? NSNumber ?? values["u"] as? NSNumber
         
         if(id != nil && ttl != nil){
+            //
             log("info", format: "update last packetId : on push topic = %@ , pushId = %@", args:topic,id )
             if unicast != nil{
-                StorageUtil.sharedInstance().setItem(id, forKey: "PushClient:\(getPushId())" + lastUnicastId)
-            }else if topic != nil && broadcastTopicsMap[topic] != nil && broadcastTopicsMap[topic] == .Receive{
-                topicToLastPacketId[topic] = id
+                //save as single pushid
+                if unicast?.integerValue == 1{
+                    StorageUtil.sharedInstance().setItem(id, forKey: "PushClient:\(getPushId())" + lastUnicastId)
+                }
+                else if unicast?.integerValue == 0 && topic != nil && broadcastTopicsMap[topic] != nil && broadcastTopicsMap[topic] == .Receive{
+                    topicToLastPacketId[topic] = id
+                }
             }
         }
         

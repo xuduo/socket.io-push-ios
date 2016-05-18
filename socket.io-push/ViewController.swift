@@ -33,9 +33,10 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
+         
+        if AppDelegate.isTesting() {
+            return
+        }
         socketIOClient = (UIApplication.sharedApplication().delegate as! AppDelegate).socketIOClient
         socketIOClient.pushCallback = self
         socketIOClient.connectCallback = self
@@ -79,6 +80,7 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
     
     deinit{
         NSNotificationCenter.defaultCenter().removeObserver(self)
+        socketIOClient.disconnect()
     }
     
     override func viewDidLayoutSubviews() {
@@ -99,13 +101,6 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
     }
     
     func onPush(dataStr: String) {
-        
-        //        print("ViewController %@ %@",topic, String(data:data!, encoding: NSUTF8StringEncoding));
-//        
-//        guard let hasData = data else{
-//            NSLog("on Push , data equals nil")
-//            return
-//        }
         
         guard let data = dataStr.dataUsingEncoding(NSUTF8StringEncoding) else{return}
         

@@ -18,11 +18,13 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     public func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+        
+        if(AppDelegate.isTesting()){
+            return true
+        }
         let url = "http://spush.yy.com"
-        
         socketIOClient = SocketIOProxyClient.init(host: url)
-        
-        // socketIOClientOc = SocketIOProxyClientOC.initWith(url);
         
         
         // Register for push in iOS 8
@@ -104,6 +106,14 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
     
     public func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], withResponseInfo responseInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
         print("3")
+    }
+    
+    static func isTesting() -> Bool{
+        let dic = NSProcessInfo.processInfo().environment
+        let isInUnitTest = dic["IS_IN_UNIT_TEST"]
+        NSLog("\(isInUnitTest)")
+        
+        return isInUnitTest == "YES"
     }
     
 }

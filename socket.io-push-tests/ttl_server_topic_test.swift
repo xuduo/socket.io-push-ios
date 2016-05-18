@@ -26,6 +26,7 @@ class ttl_server_topic_test: XCTestCase ,PushCallback,ConnectCallback{
     
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        pushClient?.disconnect()
         super.tearDown()
     }
     
@@ -56,7 +57,7 @@ class ttl_server_topic_test: XCTestCase ,PushCallback,ConnectCallback{
         }
         
         
-        self.waitForExpectationsWithTimeout(2000, handler: nil)
+        self.waitForExpectationsWithTimeout(15, handler: nil)
 
     }
     

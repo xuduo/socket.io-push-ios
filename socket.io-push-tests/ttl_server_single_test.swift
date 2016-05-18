@@ -19,6 +19,7 @@ class ttl_server_single_test: XCTestCase ,PushCallback ,ConnectCallback {
     var firstTime = true
     var push = [2,3,4]
     var reconnect = false
+    var pushed = false
     
     var expectation : XCTestExpectation?
     
@@ -29,6 +30,7 @@ class ttl_server_single_test: XCTestCase ,PushCallback ,ConnectCallback {
     
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        pushClient?.disconnect()
         super.tearDown()
     }
     
@@ -37,11 +39,11 @@ class ttl_server_single_test: XCTestCase ,PushCallback ,ConnectCallback {
         pushClient = SocketIOProxyClient(host: host)
         pushClient?.pushCallback = self
         pushClient?.connectCallback = self
-        pushClient?.subscribeBroadcast("message")
         
-        expectation = self.expectationWithDescription("Async request")
         
-        self.waitForExpectationsWithTimeout(200, handler: nil)
+        expectation = self.expectationWithDescription("Async request single test")
+        
+        self.waitForExpectationsWithTimeout(15, handler: nil)
     }
     
     //MARK : - PushCallback
@@ -71,12 +73,16 @@ class ttl_server_single_test: XCTestCase ,PushCallback ,ConnectCallback {
                     
                     XCTAssertTrue(dataStr == self.successCode, "ret code is not success when sending message : 2")
                     
+                    NSLog("send 2 success")
+                    
                     self.send((self.pushClient?.getPushId())!, topic: "message", msg: 3, completion: {
                         [unowned self](data, response, error) in
                         if let hasData = data{
                             let dataStr = NSString(data: hasData, encoding: NSUTF8StringEncoding)
                             
                             XCTAssertTrue(dataStr == self.successCode, "ret code is not success when sending message : 3")
+                            
+                            NSLog("send 3 success")
                             
                             self.pushClient?.connect()
                         }
@@ -96,7 +102,7 @@ class ttl_server_single_test: XCTestCase ,PushCallback ,ConnectCallback {
                 if push.count == 1 {
                     send((pushClient?.getPushId())!, topic: "message", msg: 4, completion: {
                         (data, response, error) in
-                    
+                            NSLog("send 4 success")
                     })
                 }
                 
@@ -109,11 +115,9 @@ class ttl_server_single_test: XCTestCase ,PushCallback ,ConnectCallback {
             }
         }
         else{//reconnect
-            XCTAssertTrue(dataDic?["message"] as? String == confirmCode, "ret value after reconnect : \(dataDic?["message"] as? String) does not match ")
+            XCTAssert(true, "Should not receive any more push")
             
-            expectation?.fulfill()
         }
-        
         
     }
     
@@ -123,7 +127,8 @@ class ttl_server_single_test: XCTestCase ,PushCallback ,ConnectCallback {
     func onConnect(uid: String) {
         NSLog("on connect")
         
-        if !reconnect {
+        if !reconnect && !pushed {
+            pushed = true
             send((pushClient?.getPushId())!, topic: "message", msg: 1) {
                 (data, response, error) in
                 if let hasData = data{
@@ -135,10 +140,11 @@ class ttl_server_single_test: XCTestCase ,PushCallback ,ConnectCallback {
                 }
             }
         }
-        else{
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW,Int64(5 * NSEC_PER_SEC)), dispatch_get_main_queue()){
+        else if reconnect{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW,Int64(2 * NSEC_PER_SEC)), dispatch_get_main_queue()){
                 [unowned self] in
                 self.pushClient?.disconnect()
+                self.expectation?.fulfill()
             }
         }
         
