@@ -57,7 +57,7 @@ class ttl_server_topic_test: XCTestCase ,PushCallback,ConnectCallback{
         }
         
         
-        self.waitForExpectationsWithTimeout(60, handler: nil)
+        self.waitForExpectationsWithTimeout(200, handler: nil)
 
     }
     
