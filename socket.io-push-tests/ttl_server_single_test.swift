@@ -43,7 +43,7 @@ class ttl_server_single_test: XCTestCase ,PushCallback ,ConnectCallback {
         
         expectation = self.expectationWithDescription("Async request single test")
         
-        self.waitForExpectationsWithTimeout(15, handler: nil)
+        self.waitForExpectationsWithTimeout(60, handler: nil)
     }
     
     //MARK : - PushCallback

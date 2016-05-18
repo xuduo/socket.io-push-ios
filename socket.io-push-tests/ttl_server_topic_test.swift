@@ -34,7 +34,7 @@ class ttl_server_topic_test: XCTestCase ,PushCallback,ConnectCallback{
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         
-        expectation = self.expectationWithDescription("Async Request")
+        expectation = self.expectationWithDescription("Async Request for topic test")
         send(true, topic: "message", msg: 1) {
             [unowned self] (data, response, error) in
             if let hasData = data{
@@ -57,7 +57,7 @@ class ttl_server_topic_test: XCTestCase ,PushCallback,ConnectCallback{
         }
         
         
-        self.waitForExpectationsWithTimeout(15, handler: nil)
+        self.waitForExpectationsWithTimeout(60, handler: nil)
 
     }
     
