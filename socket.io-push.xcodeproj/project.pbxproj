@@ -36,7 +36,9 @@
 		7327ECE11CE3122D00092D85 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECCC1CE3122D00092D85 /* WebSocket.swift */; };
 		7327ECE21CE3122D00092D85 /* SocketIOProxyClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECCD1CE3122D00092D85 /* SocketIOProxyClient.swift */; };
 		7327ECE91CE3141400092D85 /* StorageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7327ECE81CE3141400092D85 /* StorageUtil.swift */; };
+		C32A180D1CEC01A1004C7D80 /* ttl_server_single_test.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32A180C1CEC01A1004C7D80 /* ttl_server_single_test.swift */; };
 		C3567E771CE45A5F007F1216 /* socket_io_push_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3567E761CE45A5F007F1216 /* socket_io_push_tests.swift */; };
+		C3AC4CBF1CEACAA300B83999 /* ttl_server_topic_test.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3AC4CBE1CEACAA300B83999 /* ttl_server_topic_test.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,10 +82,12 @@
 		7327ECCC1CE3122D00092D85 /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
 		7327ECCD1CE3122D00092D85 /* SocketIOProxyClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketIOProxyClient.swift; sourceTree = "<group>"; };
 		7327ECE81CE3141400092D85 /* StorageUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageUtil.swift; sourceTree = "<group>"; };
+		C32A180C1CEC01A1004C7D80 /* ttl_server_single_test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ttl_server_single_test.swift; sourceTree = "<group>"; };
 		C3567E741CE45A5F007F1216 /* socket.io-push-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "socket.io-push-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3567E761CE45A5F007F1216 /* socket_io_push_tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = socket_io_push_tests.swift; sourceTree = "<group>"; };
 		C3567E781CE45A5F007F1216 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C364EA921CE1E3B00074FDCC /* Socket.io-push.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Socket.io-push.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3AC4CBE1CEACAA300B83999 /* ttl_server_topic_test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ttl_server_topic_test.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +164,8 @@
 			isa = PBXGroup;
 			children = (
 				C3567E761CE45A5F007F1216 /* socket_io_push_tests.swift */,
+				C3AC4CBE1CEACAA300B83999 /* ttl_server_topic_test.swift */,
+				C32A180C1CEC01A1004C7D80 /* ttl_server_single_test.swift */,
 				C3567E781CE45A5F007F1216 /* Info.plist */,
 			);
 			path = "socket.io-push-tests";
@@ -293,6 +299,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3567E771CE45A5F007F1216 /* socket_io_push_tests.swift in Sources */,
+				C3AC4CBF1CEACAA300B83999 /* ttl_server_topic_test.swift in Sources */,
+				C32A180D1CEC01A1004C7D80 /* ttl_server_single_test.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

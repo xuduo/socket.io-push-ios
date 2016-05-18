@@ -198,13 +198,13 @@ class Socket_io_push_tests: XCTestCase ,PushCallback ,ConnectCallback{
 
     }
     
-    func sendToUrl(url:String){
+    func sendToUrl(url:String){ 
         guard let reqUrl = NSURL(string: url)  else{
             return
         }
         let urlReq = NSURLRequest(URL: reqUrl)
         let manager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-        let dataTask = manager.dataTaskWithRequest(urlReq)         
+        let dataTask = manager.dataTaskWithRequest(urlReq)
         dataTask.resume()
     }
     
