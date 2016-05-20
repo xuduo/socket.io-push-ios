@@ -136,7 +136,7 @@ public class SocketIOProxyClient : NSObject {
     }
     
     public func onApnToken(token:String){
-        apnToken = token
+        apnToken = token.stringByReplacingOccurrencesOfString("<", withString: "").stringByReplacingOccurrencesOfString(">", withString: "").stringByReplacingOccurrencesOfString(" ", withString: "")
         sendApnTokenToServer()
     }
     

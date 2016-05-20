@@ -244,7 +244,7 @@
 					};
 					C364EA911CE1E3B00074FDCC = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = H4V332SS59;
+						DevelopmentTeam = PVE2WH4PE2;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -483,7 +483,7 @@
 				INFOPLIST_FILE = "Socket.io-push/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.xuduo.Socket-io-push";
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuduo.pushtest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -496,7 +496,7 @@
 				INFOPLIST_FILE = "Socket.io-push/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.xuduo.Socket-io-push";
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuduo.pushtest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

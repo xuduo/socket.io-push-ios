@@ -85,15 +85,8 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
-    public func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-        let tokenChars = UnsafePointer<CChar>(deviceToken.bytes)
-        var tokenString = ""
-        
-        for var i = 0; i < deviceToken.length; i++ {
-            tokenString += String(format: "%02.2hhx", arguments: [tokenChars[i]])
-        }
-        print("app token \(tokenString)")
-        self.socketIOClient.onApnToken(tokenString)
+    public func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData){
+        self.socketIOClient.onApnToken(deviceToken.description)
     }
     
     public func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
