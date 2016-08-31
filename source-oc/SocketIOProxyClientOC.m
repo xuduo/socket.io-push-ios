@@ -98,8 +98,12 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 #pragma mark - Export
 
 - (void)onApnToken:(NSString *)deviceToken {
-    _deviceToken = deviceToken;
-    [self sendApnTokenToServer];
+    if(deviceToken){
+        _deviceToken = [[[deviceToken stringByReplacingOccurrencesOfString: @"<" withString: @""]
+                                         stringByReplacingOccurrencesOfString: @">" withString: @""]
+                                        stringByReplacingOccurrencesOfString: @" " withString: @""];
+        [self sendApnTokenToServer];
+    }
 }
 
 - (void)addTag:(NSString *)tag {
