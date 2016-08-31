@@ -13,8 +13,8 @@ import UIKit
 public class AppDelegate: UIResponder, UIApplicationDelegate {
     
     public var window: UIWindow?
-    public var socketIOClient:SocketIOProxyClient!
-    // public var socketIOClientOc:SocketIOProxyClientOC!
+//    public var socketIOClient:SocketIOProxyClient!
+    public var socketIOClient:SocketIOProxyClientOC!
     
     
     public func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -24,8 +24,7 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
             return true
         }
         let url = "http://spush.yy.com"
-        socketIOClient = SocketIOProxyClient.init(host: url)
-        
+        socketIOClient = SocketIOProxyClientOC.initWith(url)
         
         // Register for push in iOS 8
         if #available(iOS 8.0, *) {
@@ -35,8 +34,6 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             UIApplication.sharedApplication().registerForRemoteNotificationTypes([.Alert, .Badge, .Sound])
         }
-        
-        
         
         return true
     }

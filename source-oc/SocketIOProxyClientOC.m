@@ -166,7 +166,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     }
 }
 
-- (void)ubindUid {
+- (void)unbindUid {
     [self sendToServer:@[@"unbindUid"]];
 }
 

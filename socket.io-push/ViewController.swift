@@ -8,11 +8,11 @@
 
 import UIKit
 
-class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
+class ViewController: UIViewController, PushCallbackDelegate{
     
     let url = "http://spush.yy.com/api/push?pushAll=true&topic=chatRoom&json=%@&timeToLive="
     
-    private var socketIOClient:SocketIOProxyClient! 
+    private var socketIOClient:SocketIOProxyClientOC!
     private var lastTimestamp = NSDate()
     
     private let msgType = "chat_message"
@@ -38,14 +38,8 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
             return
         }
         socketIOClient = (UIApplication.sharedApplication().delegate as! AppDelegate).socketIOClient
-        socketIOClient.pushCallback = self
-        socketIOClient.connectCallback = self
-        socketIOClient.logCallback = self
-        let pushId = PushIdGeneratorBase().generatePushId()
-        socketIOClient.setPushId(pushId)
+        socketIOClient.pushCallbackDelegate = self
         socketIOClient.subscribeBroadcast("chatRoom")
-        
-        
         
         self.chatTableView.separatorColor = UIColor.clearColor()
         
@@ -80,7 +74,6 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
     
     deinit{
         NSNotificationCenter.defaultCenter().removeObserver(self)
-        socketIOClient.disconnect()
     }
     
     override func viewDidLayoutSubviews() {
@@ -100,9 +93,7 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
         self.navigationItem.title = "disconnected"
     }
     
-    func onPush(dataStr: String) {
-        
-        guard let data = dataStr.dataUsingEncoding(NSUTF8StringEncoding) else{return}
+    func onPush(data: NSData) {
         
         var dataDic : NSDictionary?
         do{
@@ -130,6 +121,8 @@ class ViewController: UIViewController,ConnectCallback,PushCallback,LogCallback{
     
     
     func sendChat(msg:String){
+        
+        self.socketIOClient.unbindUid()
         
         let message = msg
         

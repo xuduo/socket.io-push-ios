@@ -36,6 +36,6 @@ extern NSString * const kAnonymousTag;
 - (void)unsubscribeBroadcast:(NSString *)topic;
 - (void)keepInBackground;
 - (void)request:(NSString*)path data:(NSData*)data;
-- (void)ubindUid;
+- (void)unbindUid;
 
 @end
