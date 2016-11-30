@@ -16,7 +16,7 @@ extern NSString * const kAnonymousTag;
 @protocol PushCallbackDelegate <NSObject>
 
 @optional
-- (void)log:(NSString*)level format:(NSString*)format args:(va_list)args;
+- (void)log:(NSString*)level message:(NSString*)message;
 - (void)onPush:(NSData*)nsdata;
 - (void)onReceivePushId:(NSString *)uid tags:(NSArray *)tags;               //收到pushId
 

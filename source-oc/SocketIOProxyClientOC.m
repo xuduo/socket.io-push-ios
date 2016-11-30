@@ -188,6 +188,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     NSString* packetString = [NSString stringWithFormat:@"%ld%@", (long)Message, [packet packetString]];
     
     if (_webSocket.readyState != SR_CONNECTING) {
+        [self log:@"debug" format:@"send to server %@",packetString];
         [_webSocket send:packetString];
     } else {
         [self log:@"info" format:@"sendToServer is connecting"];
@@ -276,7 +277,16 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     switch (frameType) {
         case Message:
         {
-           [self handleMessageBase64:message];
+            NSString* realMessage = [message substringFromIndex:1];
+            
+            NSInteger packetType = -1;
+            if (realMessage.length > 1) {
+                packetType = [[realMessage substringWithRange:NSMakeRange(0, 1)] integerValue];
+            }
+            
+            if (packetType == 2) {
+                [self handleMessageBase64:realMessage];
+            }
         }
             break;
         case Noop:
@@ -286,12 +296,15 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
             break;
         case Pong:
         {
-            if (![message isKindOfClass:[NSString class]]) {
-                [self log:@"info" format:@"错误的长连接类型%ld", (long)frameType];
-                return;
-            }
+            [self log:@"debug" format:@"onPong"];
             [self handlePong:message];
         }
+        case Ping:
+        {
+            [self log:@"debug" format:@"onPing"];
+            [self writeDataToServer:@"" type:Pong data:nil];
+        }
+
             break;
         case Open:
         {
@@ -315,18 +328,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     }
 }
 
-- (void)handleMessageBase64:(NSString*)message {
-    NSString* realMessage = [message substringFromIndex:1];
-    
-    NSInteger packetType = -1;
-    if (realMessage.length > 1) {
-        packetType = [[realMessage substringWithRange:NSMakeRange(0, 1)] integerValue];
-    }
-    
-    if (packetType < Connect) {
-        [self log:@"info" format:@"错误的长连接%@" ,realMessage];
-        return;
-    }
+- (void)handleMessageBase64:(NSString*)realMessage {
     
     realMessage = [realMessage substringFromIndex:1];
     
@@ -478,6 +480,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     _pingTimeout = [pingTimeout floatValue] / 1000.0f;
     
     [self startPingTimer];
+    [self onConnect];
 }
 
 - (void)handleClose {
@@ -561,6 +564,9 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     [self log:@"info" format:@"webSocketDidOpen"];
+}
+
+- (void)onConnect {
     [[NSNotificationCenter defaultCenter] postNotificationName:kMisakaSocketOcDidConnectNotification object:nil];
     WeakSelf()
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -575,8 +581,9 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 - (void)log:(NSString*)level format:(NSString*)format, ...{
     va_list args;
     va_start(args, format);
-    if (_pushCallbackDelegate && [_pushCallbackDelegate respondsToSelector:@selector(log:format:args:)]){
-         [_pushCallbackDelegate log:level format:format args:args];
+    if (_pushCallbackDelegate && [_pushCallbackDelegate respondsToSelector:@selector(log:message:)]){
+         NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
+         [_pushCallbackDelegate log:level message:message];
     }
     va_end(args);
 }

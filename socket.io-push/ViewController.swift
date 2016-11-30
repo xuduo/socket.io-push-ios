@@ -122,8 +122,6 @@ class ViewController: UIViewController, PushCallbackDelegate{
     
     func sendChat(msg:String){
         
-        self.socketIOClient.unbindUid()
-        
         let message = msg
         
         
