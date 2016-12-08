@@ -68,6 +68,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 }
 
 - (void)initWith:(NSString *)url {
+    NSLog(@"socket.io-push init with %@",url);
     _reconnectTimeout = 30;
     _retryElapse = 1.0f;
     _pongsMissedMax = 2;
@@ -294,17 +295,11 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
             [self handleNOOP];
         }
             break;
-        case Pong:
-        {
-            [self log:@"debug" format:@"onPong"];
-            [self handlePong:message];
-        }
         case Ping:
         {
             [self log:@"debug" format:@"onPing"];
             [self writeDataToServer:@"" type:Pong data:nil];
         }
-
             break;
         case Open:
         {
