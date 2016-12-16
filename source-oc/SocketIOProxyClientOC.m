@@ -68,7 +68,6 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 }
 
 - (void)initWith:(NSString *)url {
-    NSLog(@"socket.io-push init with %@",url);
     _reconnectTimeout = 30;
     _retryElapse = 1.0f;
     _pongsMissedMax = 2;
@@ -86,7 +85,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     _webSocket = [[SRWebSocket alloc] initWithURLRequest:_urlRequest protocols:nil allowsUntrustedSSLCertificates:YES];
     _webSocket.delegate = self;
     _pushId = [PushIdGeneratorBaseOc generatePushId];
-    
+    NSLog(@"socket.io-push init with %@ pushId %@", url, _pushId);
     _keepAliveState = KeepAlive_Connecting;
     [_webSocket open];
 }
@@ -295,10 +294,10 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
             [self handleNOOP];
         }
             break;
-        case Ping:
+        case Pong:
         {
-            [self log:@"debug" format:@"onPing"];
-            [self writeDataToServer:@"" type:Pong data:nil];
+            [self log:@"debug" format:@"onPong"];
+            [self handlePong:message];
         }
             break;
         case Open:

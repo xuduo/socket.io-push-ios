@@ -47,6 +47,7 @@
 		7327ECAA1CE3122600092D85 /* ChatInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInfo.swift; sourceTree = "<group>"; };
 		7327ECAB1CE3122600092D85 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7327ECAD1CE3122600092D85 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		7357A9F41E03ADE60084434E /* Socket.io-push.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "Socket.io-push.entitlements"; path = "Socket.io-push/Socket.io-push.entitlements"; sourceTree = "<group>"; };
 		738080CC1D76BCFB006FAD59 /* push-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "push-Bridging-Header.h"; sourceTree = "<group>"; };
 		73F6D86C1D76B41500885BF9 /* MisakaSocketOcEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MisakaSocketOcEvent.h; sourceTree = "<group>"; };
 		73F6D86D1D76B41500885BF9 /* MisakaSocketOcEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MisakaSocketOcEvent.m; sourceTree = "<group>"; };
@@ -152,6 +153,7 @@
 		C364EA891CE1E3B00074FDCC = {
 			isa = PBXGroup;
 			children = (
+				7357A9F41E03ADE60084434E /* Socket.io-push.entitlements */,
 				73F6D86B1D76B41500885BF9 /* source-oc */,
 				7327ECA31CE3122600092D85 /* socket.io-push */,
 				C3567E751CE45A5F007F1216 /* socket.io-push-tests */,
@@ -230,6 +232,9 @@
 						DevelopmentTeam = PVE2WH4PE2;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
@@ -389,6 +394,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.xuduo.socket-io-push-tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Socket.io-push.app/Socket.io-push";
 			};
 			name = Debug;
@@ -401,6 +407,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.xuduo.socket-io-push-tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Socket.io-push.app/Socket.io-push";
 			};
 			name = Release;
@@ -495,6 +502,7 @@
 			baseConfigurationReference = 41FD6007DA9537155CBAF04D /* Pods-Socket.io-push.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Socket.io-push/Socket.io-push.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = PVE2WH4PE2;
 				INFOPLIST_FILE = "Socket.io-push/Info.plist";
@@ -512,6 +520,7 @@
 			baseConfigurationReference = 24961991AA11FC558A8EA2EE /* Pods-Socket.io-push.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Socket.io-push/Socket.io-push.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = PVE2WH4PE2;
 				INFOPLIST_FILE = "Socket.io-push/Info.plist";
