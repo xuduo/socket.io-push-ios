@@ -174,6 +174,11 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     [self sendToServer:@[@"unbindUid"]];
 }
 
+
+- (void)bindUid:(NSDictionary*)data {
+    [self sendToServer:@[@"bindUid", data]];
+}
+
 #pragma --mark inner
 - (void)sendToServer:(id)data {
     if (_keepAliveState != KeepAlive_Connected) {
@@ -409,8 +414,8 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
         NSString* uid = [pushDictionary objectForKey:@"uid"];
         NSArray* tags = [pushDictionary objectForKey:@"tags"];
 
-        if (_pushCallbackDelegate && [_pushCallbackDelegate respondsToSelector:@selector(onReceivePushId:tags:)]) {
-            [_pushCallbackDelegate onReceivePushId:uid tags:tags];
+        if (_pushCallbackDelegate && [_pushCallbackDelegate respondsToSelector:@selector(onConnect:tags:)]) {
+            [_pushCallbackDelegate onConnect:uid tags:tags];
         }
     }
 }
@@ -585,6 +590,9 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
     [self log:@"info" format:@"webSocketDidFailed = %ld", (long)error.code];
     [[NSNotificationCenter defaultCenter] postNotificationName:kMisakaSocketOcDidDisconnectNotification object:nil];
+    if (_pushCallbackDelegate && [_pushCallbackDelegate respondsToSelector:@selector(onDisconnect)]) {
+        [_pushCallbackDelegate onDisconnect];
+    }
     WeakSelf()
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakSelf stopReconnectTimer];

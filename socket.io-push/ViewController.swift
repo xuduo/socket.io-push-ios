@@ -81,16 +81,20 @@ class ViewController: UIViewController, PushCallbackDelegate{
     }
     
     
-    //MARK: - PushCallback & Connect Callback
-    
-    func onConnect(uid:String){
-        print("onConnect \(uid)");
-        self.navigationItem.title = "connected"
+    func onDisconnect(){
+        print("onDisconnect");
+        self.navigationItem.title = "Disconnected"
     }
     
-    func onDisconnect() {
-        print("onDisconnect");
-        self.navigationItem.title = "disconnected"
+    func onConnect(uid: String!, tags: [AnyObject]!) {
+        print("onConnect \(uid)");
+        var data:[String:String] = [
+            "uid" : "123",
+            "token" : "test"
+        ]
+        
+        (UIApplication.sharedApplication().delegate as! AppDelegate).socketIOClient.bindUid(data)
+        self.navigationItem.title = "Connected"
     }
     
     func onPush(data: NSData) {

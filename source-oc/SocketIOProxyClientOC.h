@@ -18,8 +18,8 @@ extern NSString * const kAnonymousTag;
 @optional
 - (void)log:(NSString*)level message:(NSString*)message;
 - (void)onPush:(NSData*)nsdata;
-- (void)onReceivePushId:(NSString *)uid tags:(NSArray *)tags;               //收到pushId
-
+- (void)onConnect:(NSString *)uid tags:(NSArray *)tags;               //收到pushId
+- (void)onDisconnect;
 @end
 
 @interface SocketIOProxyClientOC : NSObject
@@ -37,5 +37,6 @@ extern NSString * const kAnonymousTag;
 - (void)keepInBackground;
 - (void)request:(NSString*)path data:(NSData*)data;
 - (void)unbindUid;
+- (void)bindUid:(NSDictionary*)data;
 
 @end
