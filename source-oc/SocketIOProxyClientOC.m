@@ -100,8 +100,8 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 - (void)onApnToken:(NSString *)deviceToken {
     if(deviceToken){
         _deviceToken = [[[deviceToken stringByReplacingOccurrencesOfString: @"<" withString: @""]
-                                         stringByReplacingOccurrencesOfString: @">" withString: @""]
-                                        stringByReplacingOccurrencesOfString: @" " withString: @""];
+                         stringByReplacingOccurrencesOfString: @">" withString: @""]
+                        stringByReplacingOccurrencesOfString: @" " withString: @""];
         [self sendApnTokenToServer];
     }
 }
@@ -216,6 +216,13 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
         NSString* bundleId = [[NSBundle mainBundle] bundleIdentifier];
         [self sendToServer:@[@"apnToken", @{@"apnToken":_deviceToken, @"pushId":_pushId, @"bundleId":bundleId.length ? bundleId : @""}]];
         NSLog(@"sendApnTokenToServer");
+    }
+}
+
+- (void)sendClickToServer:(NSString*)notiId {
+    if (_keepAliveState == KeepAlive_Connected && _deviceToken != nil && _pushId != nil) {
+        [self sendToServer:@[@"notificationClick", @{@"id":notiId, @"type":@"apn"}]];
+        NSLog(@"sendClickToServer %@", notiId);
     }
 }
 
@@ -413,7 +420,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
         }
         NSString* uid = [pushDictionary objectForKey:@"uid"];
         NSArray* tags = [pushDictionary objectForKey:@"tags"];
-
+        
         if (_pushCallbackDelegate && [_pushCallbackDelegate respondsToSelector:@selector(onConnect:tags:)]) {
             [_pushCallbackDelegate onConnect:uid tags:tags];
         }
@@ -489,7 +496,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 
 - (void)retryConnect {
     // 保持重开。
-    WeakSelf()
+    SocketIOProxyClientOC __weak *weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_retryElapse * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf log:@"info" format:@"长连接重连。。。"];
         if (weakSelf.keepAliveState != KeepAlive_Disconnected) {
@@ -515,7 +522,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 }
 
 - (void)closeConnect {
-    WeakSelf()
+    SocketIOProxyClientOC __weak *weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_retryElapse * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         weakSelf.keepAliveState = KeepAlive_Disconnected;
         if (weakSelf.pingTimer != nil) {
@@ -547,7 +554,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
             _pingTimer = nil;
         }
         
-        WeakSelf();
+        SocketIOProxyClientOC __weak *weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.pingTimer = [NSTimer scheduledTimerWithTimeInterval:weakSelf.pingInterval target:weakSelf selector:@selector(sendPing) userInfo:nil repeats:YES];
         });
@@ -567,7 +574,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 
 - (void)onConnect {
     [[NSNotificationCenter defaultCenter] postNotificationName:kMisakaSocketOcDidConnectNotification object:nil];
-    WeakSelf()
+    SocketIOProxyClientOC __weak *weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakSelf stopReconnectTimer];
         weakSelf.pongsMissed = 0;
@@ -581,8 +588,8 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     va_list args;
     va_start(args, format);
     if (_pushCallbackDelegate && [_pushCallbackDelegate respondsToSelector:@selector(log:message:)]){
-         NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
-         [_pushCallbackDelegate log:level message:message];
+        NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
+        [_pushCallbackDelegate log:level message:message];
     }
     va_end(args);
 }
@@ -593,7 +600,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     if (_pushCallbackDelegate && [_pushCallbackDelegate respondsToSelector:@selector(onDisconnect)]) {
         [_pushCallbackDelegate onDisconnect];
     }
-    WeakSelf()
+    SocketIOProxyClientOC __weak *weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakSelf stopReconnectTimer];
         weakSelf.keepAliveState = KeepAlive_Disconnected;
@@ -604,13 +611,11 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     [self log:@"info" format:@"webSocketDidClose reason = %@", reason];
     [[NSNotificationCenter defaultCenter] postNotificationName:kMisakaSocketOcDidDisconnectNotification object:nil];
-    WeakSelf()
+    SocketIOProxyClientOC __weak *weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakSelf stopReconnectTimer];
         weakSelf.keepAliveState = KeepAlive_Disconnected;
         [weakSelf retryConnect];
     });
 }
-
-
 @end

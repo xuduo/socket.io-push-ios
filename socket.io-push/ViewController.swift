@@ -88,7 +88,7 @@ class ViewController: UIViewController, PushCallbackDelegate{
     
     func onConnect(uid: String!, tags: [AnyObject]!) {
         print("onConnect \(uid)");
-        var data:[String:String] = [
+        let data:[String:String] = [
             "uid" : "123",
             "token" : "test"
         ]

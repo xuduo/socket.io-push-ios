@@ -5,10 +5,6 @@
 //  Created by bleach on 16/2/8.
 //  Copyright © 2016年 YY. All rights reserved.
 //
-#ifndef WeakSelf
-#define WeakSelf() __weak typeof(self) weakSelf = self;
-#endif
-
 #import <Foundation/Foundation.h>
 
 extern NSString * const kAnonymousTag;
