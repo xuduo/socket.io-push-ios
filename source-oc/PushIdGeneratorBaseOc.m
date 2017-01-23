@@ -7,6 +7,7 @@
 //
 
 #import "PushIdGeneratorBaseOc.h"
+#import "SAMKeyChain.h"
 
 @implementation PushIdGeneratorBaseOc
 
@@ -31,12 +32,16 @@
 }
 
 + (NSString*)generatePushId {
-    NSString* strPushID = [[NSUserDefaults standardUserDefaults] objectForKey:@"SharedPreferencePushGenerator"];
-    if (nil == strPushID) {
-        strPushID = [PushIdGeneratorBaseOc randomAlphaNumeric:32];
-        [[NSUserDefaults standardUserDefaults] setObject:strPushID forKey:@"SharedPreferencePushGenerator"];
+    
+    NSString* pushId = [SAMKeychain passwordForService:@"socket.io-push" account:@"pushId"];
+    NSLog(@"MiKeychainItemWrapper pushId %@", pushId);
+    
+    if (nil == pushId) {
+        pushId = [PushIdGeneratorBaseOc randomAlphaNumeric:16];
+        [SAMKeychain setPassword:pushId forService:@"socket.io-push" account:@"pushId"];
     }
-    return strPushID;
+    
+    return pushId;
 }
 
 @end

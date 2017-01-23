@@ -107,7 +107,6 @@ class ViewController: UIViewController, PushCallbackDelegate{
         }
         
         self.parseChatDic(dataDic)
-
         
     }
     
