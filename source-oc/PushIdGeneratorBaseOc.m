@@ -33,11 +33,23 @@
 
 + (NSString*)generatePushId {
     
-    NSString* pushId = [SAMKeychain passwordForService:@"socket.io-push" account:@"pushId"];
-    NSLog(@"MiKeychainItemWrapper pushId %@", pushId);
+    NSString* pushIdKeyChain = [SAMKeychain passwordForService:@"socket.io-push" account:@"pushId"];
+    
+    NSString* pushId = pushIdKeyChain;
     
     if (nil == pushId) {
-        pushId = [PushIdGeneratorBaseOc randomAlphaNumeric:16];
+        pushId = pushIdKeyChain;
+        if (nil == pushId){
+            pushId = [[NSUserDefaults standardUserDefaults] objectForKey:@"SharedPreferencePushGenerator"];
+            if (nil == pushId) {
+                pushId = [PushIdGeneratorBaseOc randomAlphaNumeric:16];
+            }
+        }
+    }
+    
+    NSLog(@"PushIdGeneratorBaseOc pushIdKeyChain %@ pushId %@", pushIdKeyChain, pushId);
+    
+    if (nil == pushIdKeyChain) {
         [SAMKeychain setPassword:pushId forService:@"socket.io-push" account:@"pushId"];
     }
     
