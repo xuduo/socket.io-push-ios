@@ -7,9 +7,11 @@ Pod::Spec.new do |s|
       :type => 'GNU General Public License v2.0',
       :file => "LICENSE"
   }
+  s.dependency 'SocketRocket'
+  s.dependency 'SAMKeychain' 
   s.author       = { 'author' => 'xuudoo@gmail.com' }
   s.platform     = :ios, '7.0'
   s.requires_arc = true
   s.source_files = 'source-oc/*'
-  s.source       = { :git => 'https://github.com/xuduo/socket.io-push-ios', :tag => 'v#{spec.version}' }
+  s.source       = { :git => 'https://github.com/xuduo/socket.io-push-ios' }
 end
