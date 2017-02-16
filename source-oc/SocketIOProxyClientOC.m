@@ -56,6 +56,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 
 @property (nonatomic, assign) NSUInteger version;
 @property (nonatomic, strong) NSString* platform;
+@property (nonatomic, strong) NSMutableArray* failedPacket;
 
 @end
 
@@ -76,6 +77,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     _pongsMissed = 0;
     _version = ProtocolData_Base64;
     _platform = @"iOS";
+    _failedPacket = [NSMutableArray new];
     
     NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/socket.io/?transport=websocket", url]]];
     _urlRequest = request;
@@ -109,6 +111,18 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 - (void)addTag:(NSString *)tag {
     if (_keepAliveState == KeepAlive_Connected && tag != nil) {
         [self sendToServer:@[@"addTag", @{@"tag":tag}]];
+    }
+}
+
+- (void) sendClickStats:(NSDictionary*) userInfo {
+    if (userInfo != nil && [UIApplication sharedApplication].applicationState != UIApplicationStateActive){
+        NSDictionary* noti = [userInfo objectForKey:@"noti"];
+        if (noti != nil) {
+            NSString* _id = [noti objectForKey:@"id"];
+            if (_id != nil) {
+                 [self sendToServerCached:@[@"notificationClick", @{@"id":_id ,@"type":@"apn"}]];
+            }
+        }
     }
 }
 
@@ -174,29 +188,45 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     [self sendToServer:@[@"unbindUid"]];
 }
 
-
 - (void)bindUid:(NSDictionary*)data {
     [self sendToServer:@[@"bindUid", data]];
 }
 
+- (void)sendFailedPacket {
+    NSMutableArray *discardedItems = [NSMutableArray array];
+    for (id data in _failedPacket) {
+        if ([self sendToServer:data]){
+            [discardedItems addObject:data];
+        }
+    }
+    [_failedPacket removeObjectsInArray:discardedItems];
+}
+
+- (void)sendToServerCached:(id)data {
+    if (![self sendToServer:data]) {
+        [_failedPacket addObject:data];
+    }
+}
+
 #pragma --mark inner
-- (void)sendToServer:(id)data {
+- (bool)sendToServer:(id)data {
     if (_keepAliveState != KeepAlive_Connected) {
         [self log:@"info" format:@"sendToServer is not connected"];
         [self stopReconnectTimer];
         _keepAliveState = KeepAlive_Disconnected;
         [self retryConnect];
-        return;
+        return false;
     }
     
-    SocketPacketOc* packet = [SocketPacketOc packetFromEmit:data Id:-1 nsp:@"/" ack:NO];
-    NSString* packetString = [NSString stringWithFormat:@"%ld%@", (long)Message, [packet packetString]];
-    
     if (_webSocket.readyState != SR_CONNECTING) {
+        SocketPacketOc* packet = [SocketPacketOc packetFromEmit:data Id:-1 nsp:@"/" ack:NO];
+        NSString* packetString = [NSString stringWithFormat:@"%ld%@", (long)Message, [packet packetString]];
         [self log:@"debug" format:@"send to server %@",packetString];
         [_webSocket send:packetString];
+        return true;
     } else {
         [self log:@"info" format:@"sendToServer is connecting"];
+        return false;
     }
 }
 
@@ -581,6 +611,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
         weakSelf.keepAliveState = KeepAlive_Connected;
         [weakSelf sendPushIdAndTopicToServer];
         [weakSelf sendApnTokenToServer];
+        [weakSelf sendFailedPacket];
     });
 }
 

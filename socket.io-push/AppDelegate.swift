@@ -19,11 +19,11 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
     
     public func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        
         if(AppDelegate.isTesting()){
             return true
         }
-        let url = "http://spush.yy.com"
+    
+        let url = "https://spush.yy.com"
         socketIOClient = SocketIOProxyClientOC.initWith(url)
         
         // Register for push in iOS 8
@@ -34,6 +34,17 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             UIApplication.sharedApplication().registerForRemoteNotificationTypes([.Alert, .Badge, .Sound])
         }
+        
+        self.socketIOClient.sendClickStats(launchOptions);
+        print("didFinishLaunchingWithOptions \(UIApplication.sharedApplication().applicationState == UIApplicationState.Active)  \(launchOptions)");
+//        let notification = UILocalNotification()
+//        notification.alertBody = "Todo Item 1 Is Overdue" // text that will be displayed in the notification
+//        notification.alertAction = "open" // text that is displayed after "slide to..." on the lock screen - defaults to "slide to view"
+//        notification.fireDate = NSDate(timeIntervalSinceNow: 10) // todo item due date (when notification will be fired) notification.soundName = UILocalNotificationDefaultSoundName // play default sound
+//        notification.userInfo = ["title": "test", "UUID": "12344"] // assign a unique identifier to the notification so that we can retrieve it later
+//        
+//        UIApplication.sharedApplication().scheduleLocalNotification(notification)
+        
         
         return true
     }
@@ -86,8 +97,13 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
         self.socketIOClient.onApnToken(deviceToken.description)
     }
     
+    public func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        print("didFailToRegisterForRemoteNotificationsWithError")
+    }
+    
     public func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-        print("1")
+        print("didReceiveRemoteNotification  \(UIApplication.sharedApplication().applicationState == UIApplicationState.Active), \(userInfo.description)");
+        self.socketIOClient.sendClickStats(userInfo);
     }
     
     public func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {

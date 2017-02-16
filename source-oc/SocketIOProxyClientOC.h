@@ -24,6 +24,7 @@ extern NSString * const kAnonymousTag;
 @property(strong, nonatomic) NSString* pushId;
 
 + (instancetype)initWith:(NSString *)url;
+- (void)sendClickStats:(NSDictionary*) userInfo;
 - (void)onApnToken:(NSString *)deviceToken;
 - (void)addTag:(NSString *)tag;
 - (void)removeTag:(NSString *)tag;
