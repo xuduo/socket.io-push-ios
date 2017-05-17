@@ -12,10 +12,10 @@ class ViewController: UIViewController, PushCallbackDelegate{
     
     let url = "http://spush.yy.com/api/push?pushAll=true&topic=chatRoom&json=%@&timeToLive="
     
-    private var socketIOClient:SocketIOProxyClientOC!
-    private var lastTimestamp = NSDate()
+    fileprivate var socketIOClient:SocketIOProxyClientOC!
+    fileprivate var lastTimestamp = Date()
     
-    private let msgType = "chat_message"
+    fileprivate let msgType = "chat_message"
     
     @IBOutlet weak var textFieldBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var chatTextField: UITextField!
@@ -25,7 +25,7 @@ class ViewController: UIViewController, PushCallbackDelegate{
     
     var userName : String!
     
-    private var chats : [ChatInfo]!
+    fileprivate var chats : [ChatInfo]!
     
     
     
@@ -37,33 +37,33 @@ class ViewController: UIViewController, PushCallbackDelegate{
         if AppDelegate.isTesting() {
             return
         }
-        socketIOClient = (UIApplication.sharedApplication().delegate as! AppDelegate).socketIOClient
+        socketIOClient = (UIApplication.shared.delegate as! AppDelegate).socketIOClient
         socketIOClient.pushCallbackDelegate = self
         socketIOClient.subscribeBroadcast("chatRoom")
         
-        self.chatTableView.separatorColor = UIColor.clearColor()
+        self.chatTableView.separatorColor = UIColor.clear
         
         if #available(iOS 8.0, *) {
-            let userNameInputAlert = UIAlertController(title: "用户名", message: "userName", preferredStyle: .Alert)
+            let userNameInputAlert = UIAlertController(title: "用户名", message: "userName", preferredStyle: .alert)
             
             
-            userNameInputAlert.addTextFieldWithConfigurationHandler({ [unowned self](textField) in
+            userNameInputAlert.addTextField(configurationHandler: { [unowned self](textField) in
                 textField.placeholder = "Input user name"
                 textField.delegate = self
                 })
             
-            let ok = UIAlertAction(title: "ok", style: .Default, handler: { [unowned self] (action) in
+            let ok = UIAlertAction(title: "ok", style: .default, handler: { [unowned self] (action) in
                 self.userName = userNameInputAlert.textFields?[0].text
                 NSLog("\(userNameInputAlert.textFields![0].text)")
                 })
             
             userNameInputAlert.addAction(ok)
-            self.presentViewController(userNameInputAlert, animated: true, completion: nil)
+            self.present(userNameInputAlert, animated: true, completion: nil)
         } else {
             // Fallback on earlier versions
             let userNameInputAlert = UIAlertView(title: "用户名", message: "userName", delegate: self, cancelButtonTitle: "ok")
-            userNameInputAlert.alertViewStyle = .PlainTextInput
-            userNameInputAlert.textFieldAtIndex(0)?.delegate = self
+            userNameInputAlert.alertViewStyle = .plainTextInput
+            userNameInputAlert.textField(at: 0)?.delegate = self
             userNameInputAlert.show()
         }
         
@@ -73,7 +73,7 @@ class ViewController: UIViewController, PushCallbackDelegate{
     }
     
     deinit{
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidLayoutSubviews() {
@@ -86,22 +86,22 @@ class ViewController: UIViewController, PushCallbackDelegate{
         self.navigationItem.title = "Disconnected"
     }
     
-    func onConnect(uid: String!, tags: [AnyObject]!) {
+    func onConnect(_ uid: String!, tags: [AnyObject]!) {
         print("onConnect \(uid)");
         let data:[String:String] = [
             "uid" : "123",
             "token" : "test"
         ]
         
-        (UIApplication.sharedApplication().delegate as! AppDelegate).socketIOClient.bindUid(data)
+        (UIApplication.shared.delegate as! AppDelegate).socketIOClient.bindUid(data)
         self.navigationItem.title = "Connected"
     }
     
-    func onPush(data: NSData) {
+    func onPush(_ data: Data) {
         
         var dataDic : NSDictionary?
         do{
-            dataDic = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? NSDictionary
+            dataDic = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSDictionary
         }catch _{
             return
         }
@@ -110,20 +110,20 @@ class ViewController: UIViewController, PushCallbackDelegate{
         
     }
     
-    func log(level: String, message: String) {
+    func log(_ level: String, message: String) {
         NSLog("Level : \(level) , message : \(message)")
     }
     
     //MARK: - Helpers
     
     func registerKeyboardNotifications(){
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillChange), name: UIKeyboardWillChangeFrameNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillHide), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
     }
     
     
-    func sendChat(msg:String){
+    func sendChat(_ msg:String){
         
         let message = msg
         
@@ -134,39 +134,39 @@ class ViewController: UIViewController, PushCallbackDelegate{
             "type" : msgType
         ]
         
-        var jsonData : NSData! = nil
+        var jsonData : Data! = nil
         do{
             
-            jsonData = try NSJSONSerialization.dataWithJSONObject(chatDic, options: .PrettyPrinted)
+            jsonData = try JSONSerialization.data(withJSONObject: chatDic, options: .prettyPrinted)
         }catch _{
             return
         }
         
-        guard let jsonStr = NSString(data: jsonData, encoding: NSUTF8StringEncoding) else{
+        guard let jsonStr = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue) else{
             return
         }
         
-        let set : NSMutableCharacterSet = NSMutableCharacterSet.alphanumericCharacterSet()
+        let set : NSMutableCharacterSet = NSMutableCharacterSet.alphanumeric()
         
-        guard let encodedStr = jsonStr.stringByAddingPercentEncodingWithAllowedCharacters(set) else{
+        guard let encodedStr = jsonStr.addingPercentEncoding(withAllowedCharacters: set as CharacterSet) else{
             return
         }
         
         let jsonUrl = String(format: url, encodedStr)
         
-        guard let reqUrl = NSURL(string: jsonUrl)  else{
+        guard let reqUrl = URL(string: jsonUrl)  else{
             return
         }
-        let urlReq = NSURLRequest(URL: reqUrl)
+        let urlReq = URLRequest(url: reqUrl)
         
-        let manager = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-        let dataTask = manager.dataTaskWithRequest(urlReq)
+        let manager = URLSession(configuration: URLSessionConfiguration.default)
+        let dataTask = manager.dataTask(with: urlReq)
         
         dataTask.resume()
     }
     
     
-    func parseChatDic(dic:NSDictionary?){
+    func parseChatDic(_ dic:NSDictionary?){
         if let dataDic = dic {
             
             let chatInfo = ChatInfo()
@@ -182,10 +182,10 @@ class ViewController: UIViewController, PushCallbackDelegate{
                 chats = [ChatInfo]()
             }
             
-            let idx = NSIndexPath(forRow: chats.count, inSection: 0)
+            let idx = IndexPath(row: chats.count, section: 0)
             chats.append(chatInfo)
-            self.chatTableView.insertRowsAtIndexPaths([idx], withRowAnimation: .Fade)
-            self.chatTableView.scrollToRowAtIndexPath(idx, atScrollPosition: .Bottom, animated: true)
+            self.chatTableView.insertRows(at: [idx], with: .fade)
+            self.chatTableView.scrollToRow(at: idx, at: .bottom, animated: true)
         }
     }
     
@@ -212,18 +212,18 @@ class ViewController: UIViewController, PushCallbackDelegate{
 extension ViewController:UITableViewDataSource{
     
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chats == nil ?  0 :chats!.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell : UITableViewCell! = tableView.dequeueReusableCellWithIdentifier(reuseId)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell : UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: reuseId)
         if cell == nil {
-            cell = UITableViewCell(style: .Default , reuseIdentifier: reuseId)
+            cell = UITableViewCell(style: .default , reuseIdentifier: reuseId)
         }
         
         let chat = chats[indexPath.row]
@@ -237,8 +237,8 @@ extension ViewController:UITableViewDataSource{
 //MARK: - TableView Delegate
 extension ViewController:UITableViewDelegate{
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
@@ -246,7 +246,7 @@ extension ViewController:UITableViewDelegate{
 //MARK: - UITextField Delegate
 
 extension ViewController:UITextFieldDelegate{
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
         if textField == self.chatTextField{
             
@@ -273,14 +273,14 @@ extension ViewController:UITextFieldDelegate{
 //MARK: - Notification Callbacks
 
 extension ViewController{
-    func keyboardWillChange(noti:NSNotification){
+    func keyboardWillChange(_ noti:Notification){
         
-        if !self.chatTextField.isFirstResponder(){
+        if !self.chatTextField.isFirstResponder{
             return
         }
-        if let height = (noti.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue().height{
+        if let height = (noti.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height{
             if height > 0 {
-                self.tapView?.hidden = false
+                self.tapView?.isHidden = false
             }
             self.textFieldBottomConstraint.constant = height
             self.chatTextField.setNeedsLayout()
@@ -288,27 +288,27 @@ extension ViewController{
             if self.chats != nil && self.chats.count > 0 {
                 idx = self.chats.count - 1
             }
-            UIView.animateWithDuration(0.25){
+            UIView.animate(withDuration: 0.25, animations: {
                 [unowned self] in
                 self.view.layoutIfNeeded()
                 if idx  >= 0{
-                    let index = NSIndexPath(forRow: idx, inSection: 0)
+                    let index = IndexPath(row: idx, section: 0)
                     
-                    self.chatTableView.scrollToRowAtIndexPath(index, atScrollPosition: .Bottom, animated: true)
+                    self.chatTableView.scrollToRow(at: index, at: .bottom, animated: true)
                 }
                 
-            }
+            })
             
         }
     }
     
-    func keyboardWillHide(noti:NSNotification){
-        self.tapView?.hidden = true
-        UIView.animateWithDuration(0.25){
+    func keyboardWillHide(_ noti:Notification){
+        self.tapView?.isHidden = true
+        UIView.animate(withDuration: 0.25, animations: {
             [unowned self] in
             self.textFieldBottomConstraint.constant = 0
             self.view.layoutIfNeeded()
             
-        }
+        })
     }
 }
