@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'socket.io-push-oc'
-  s.version      = '0.0.7'
+  s.version      = '0.0.9'
   s.summary      = 'socket.io-push-oc'
   s.homepage     = 'https://github.com/xuduo/socket.io-push-ios'
   s.license      = {

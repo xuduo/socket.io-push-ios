@@ -58,7 +58,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 @property (nonatomic, strong) NSString* platform;
 @property (nonatomic, strong) NSString* tokenFromServer;
 @property (nonatomic, strong) NSMutableArray* failedPacket;
-@property (nonatomic, strong) NSArray* tags;
+@property (nonatomic, strong) NSArray* tagsToSet;
 @property (nonatomic, strong) NSArray* tagsFromServer;
 
 @end
@@ -83,6 +83,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     _failedPacket = [NSMutableArray new];
     _tokenFromServer = @"";
     _tagsFromServer = @[];
+    _tagsToSet = nil;
     
     NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/socket.io/?transport=websocket", url]]];
     _urlRequest = request;
@@ -140,7 +141,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
         [self log:@"info" format:@"tags equal skip send to server"];
         return;
     }
-    _tags = tags;
+    _tagsToSet = tags;
     if (_keepAliveState == KeepAlive_Connected && tags != nil) {
         [self sendToServer:@[@"setTags", tags]];
     }
@@ -312,8 +313,8 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
         if (tokenObject != nil) {
             [pushIdAndTopicDict setObject:tokenObject forKey:@"token"];
         }
-        if (_tags != nil) {
-            [pushIdAndTopicDict setObject:_tags forKey:@"tags"];
+        if (_tagsToSet != nil) {
+            [pushIdAndTopicDict setObject:_tagsToSet forKey:@"tags"];
         }
         if (_topicToLastPacketId.count > 0) {
             [pushIdAndTopicDict setObject:_topicToLastPacketId forKey:@"lastPacketIds"];
@@ -510,6 +511,9 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
         NSArray* tags = [pushDictionary objectForKey:@"tags"];
         if (tags != nil){
             _tagsFromServer = tags;
+            if ([self arrayEqual:_tagsFromServer to:_tagsToSet]) {
+                _tagsToSet = nil;
+            }
         }
         NSString* token = [pushDictionary objectForKey:@"token"];
         if (token != nil) {
