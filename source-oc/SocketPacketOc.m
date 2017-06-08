@@ -80,13 +80,12 @@
     }
     
     for (id arg in _data) {
-        if ([arg isKindOfClass:[NSDictionary class]]) {
-                NSData* jsonSend = [NSJSONSerialization dataWithJSONObject:arg options:NSJSONWritingPrettyPrinted error:nil];
+        if ([arg isKindOfClass:[NSDictionary class]] || [arg isKindOfClass:[NSArray class]]) {
+                NSData* jsonSend = [NSJSONSerialization dataWithJSONObject:arg options:0 error:nil];
             NSString* jsonString = [[NSString alloc] initWithData:jsonSend encoding:NSUTF8StringEncoding];
             
             message = [NSMutableString stringWithFormat:@"%@%@,", message, [jsonString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
-        }
-        else if ([arg isKindOfClass:[NSString class]]) {
+        } else if ([arg isKindOfClass:[NSString class]]) {
             NSMutableString* str = [NSMutableString stringWithString:arg];
             [str replaceOccurrencesOfString:@"\n"
                                  withString:@"\\\\n"

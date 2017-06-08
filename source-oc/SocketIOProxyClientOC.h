@@ -14,7 +14,7 @@ extern NSString * const kAnonymousTag;
 @optional
 - (void)log:(NSString*)level message:(NSString*)message;
 - (void)onPush:(NSData*)nsdata;
-- (void)onConnect:(NSString *)uid tags:(NSArray *)tags;               //收到pushId
+- (void)onConnect:(NSString *)uid;               //收到pushId
 - (void)onDisconnect;
 @end
 
@@ -25,9 +25,8 @@ extern NSString * const kAnonymousTag;
 
 + (instancetype)initWith:(NSString *)url;
 - (void)sendClickStats:(NSDictionary*) userInfo;
-- (void)onApnToken:(NSString *)deviceToken;
-- (void)addTag:(NSString *)tag;
-- (void)removeTag:(NSString *)tag;
+- (void)onApnToken:(NSData *)deviceToken;
+- (void)setTags:(NSArray *)tags;
 - (void)subscribeBroadcast:(NSString *)topic;
 - (void)subscribeBroadcast:(NSString *)topic receiveTtlPackets:(BOOL)receiveTtlPackets;
 - (void)unsubscribeBroadcast:(NSString *)topic;

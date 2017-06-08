@@ -56,7 +56,10 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 
 @property (nonatomic, assign) NSUInteger version;
 @property (nonatomic, strong) NSString* platform;
+@property (nonatomic, strong) NSString* tokenFromServer;
 @property (nonatomic, strong) NSMutableArray* failedPacket;
+@property (nonatomic, strong) NSArray* tags;
+@property (nonatomic, strong) NSArray* tagsFromServer;
 
 @end
 
@@ -78,6 +81,8 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     _version = ProtocolData_Base64;
     _platform = @"iOS";
     _failedPacket = [NSMutableArray new];
+    _tokenFromServer = @"";
+    _tagsFromServer = @[];
     
     NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/socket.io/?transport=websocket", url]]];
     _urlRequest = request;
@@ -99,18 +104,45 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 
 #pragma mark - Export
 
-- (void)onApnToken:(NSString *)deviceToken {
-    if(deviceToken){
-        _deviceToken = [[[deviceToken stringByReplacingOccurrencesOfString: @"<" withString: @""]
-                         stringByReplacingOccurrencesOfString: @">" withString: @""]
-                        stringByReplacingOccurrencesOfString: @" " withString: @""];
+- (void)onApnToken:(NSData *)deviceTokenData {
+    if(deviceTokenData){
+        NSString *deviceTokenString = [self hexadecimalString:deviceTokenData];
+        if([_tokenFromServer isEqualToString:_deviceToken]){
+            [self log:@"debug" format:@"equal to server skip ",_deviceToken];
+            return;
+        }
+        _deviceToken = deviceTokenString;
+        [self log:@"info" format:@"_deviceToken %@",_deviceToken];
         [self sendApnTokenToServer];
     }
 }
 
-- (void)addTag:(NSString *)tag {
-    if (_keepAliveState == KeepAlive_Connected && tag != nil) {
-        [self sendToServer:@[@"addTag", @{@"tag":tag}]];
+- (NSString *)hexadecimalString:(NSData *)data {
+    /* Returns hexadecimal string of NSData. Empty string if data is empty.   */
+    
+    const unsigned char *dataBuffer = (const unsigned char *)[data bytes];
+    
+    if (!dataBuffer)
+        return [NSString string];
+    
+    NSUInteger          dataLength  = [data length];
+    NSMutableString     *hexString  = [NSMutableString stringWithCapacity:(dataLength * 2)];
+    
+    for (int i = 0; i < dataLength; ++i)
+        [hexString appendString:[NSString stringWithFormat:@"%02lx", (unsigned long)dataBuffer[i]]];
+    
+    return [NSString stringWithString:hexString];
+}
+
+
+- (void)setTags:(NSArray *)tags {
+    if([self arrayEqual:tags to:_tagsFromServer]) {
+        [self log:@"info" format:@"tags equal skip send to server"];
+        return;
+    }
+    _tags = tags;
+    if (_keepAliveState == KeepAlive_Connected && tags != nil) {
+        [self sendToServer:@[@"setTags", tags]];
     }
 }
 
@@ -123,12 +155,6 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
                  [self sendToServerCached:@[@"notificationClick", @{@"id":_id ,@"type":@"apn"}]];
             }
         }
-    }
-}
-
-- (void)removeTag:(NSString *)tag {
-    if (_keepAliveState == KeepAlive_Connected && tag != nil) {
-        [self sendToServer:@[@"removeTag", @{@"tag":tag}]];
     }
 }
 
@@ -221,7 +247,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
     if (_webSocket.readyState != SR_CONNECTING) {
         SocketPacketOc* packet = [SocketPacketOc packetFromEmit:data Id:-1 nsp:@"/" ack:NO];
         NSString* packetString = [NSString stringWithFormat:@"%ld%@", (long)Message, [packet packetString]];
-        [self log:@"debug" format:@"send to server %@",packetString];
+        [self log:@"debug" format:@"send to server %@", packetString];
         [_webSocket send:packetString];
         return true;
     } else {
@@ -242,7 +268,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 }
 
 - (void)sendApnTokenToServer {
-    if (_keepAliveState == KeepAlive_Connected && _deviceToken != nil && _pushId != nil) {
+    if (_keepAliveState == KeepAlive_Connected && [_deviceToken isEqualToString:_tokenFromServer] && _deviceToken != nil && _pushId != nil) {
         NSString* bundleId = [[NSBundle mainBundle] bundleIdentifier];
         [self sendToServer:@[@"apnToken", @{@"apnToken":_deviceToken, @"pushId":_pushId, @"bundleId":bundleId.length ? bundleId : @""}]];
         NSLog(@"sendApnTokenToServer");
@@ -254,6 +280,16 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
         [self sendToServer:@[@"notificationClick", @{@"id":notiId, @"type":@"apn"}]];
         NSLog(@"sendClickToServer %@", notiId);
     }
+}
+
+- (NSDictionary*)getTokenObject {
+    if(_deviceToken != nil && [_deviceToken length] > 0){
+        NSString* bundleId = [[NSBundle mainBundle] bundleIdentifier];
+        if(bundleId != nil && bundleId.length > 0){
+            return @{@"token":_deviceToken, @"type":@"apn", @"package_name":bundleId};
+        }
+    }
+    return nil;
 }
 
 - (void)sendPushIdAndTopicToServer {
@@ -272,7 +308,13 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
         [pushIdAndTopicDict setObject:_pushId forKey:@"id"];
         [pushIdAndTopicDict setObject:@(_version) forKey:@"version"];
         [pushIdAndTopicDict setObject:_platform forKey:@"platform"];
-        
+        NSDictionary *tokenObject = [self getTokenObject];
+        if (tokenObject != nil) {
+            [pushIdAndTopicDict setObject:tokenObject forKey:@"token"];
+        }
+        if (_tags != nil) {
+            [pushIdAndTopicDict setObject:_tags forKey:@"tags"];
+        }
         if (_topicToLastPacketId.count > 0) {
             [pushIdAndTopicDict setObject:_topicToLastPacketId forKey:@"lastPacketIds"];
         }
@@ -284,6 +326,22 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
         
         [self sendToServer:packet];
     }
+}
+
+- (bool)arrayEqual:(NSArray*)array1 to:(NSArray*)array2 {
+    if(array1 == nil && array2 != nil){
+        return false;
+    }
+    if(array2 == nil && array1 != nil){
+        return false;
+    }
+    if(array1 == nil && array2 == nil){
+        return true;
+    }
+    array1 = [array1 sortedArrayUsingSelector:@selector(compare:)];
+    array2 = [array2 sortedArrayUsingSelector:@selector(compare:)];
+    
+    return [array1 isEqualToArray:array2];
 }
 
 - (void)updateLastPacketId:(NSString*)packetId ttl:(NSObject*)ttl unicast:(NSObject*)unicast topic:(NSString*)topic {
@@ -450,10 +508,19 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
         }
         NSString* uid = [pushDictionary objectForKey:@"uid"];
         NSArray* tags = [pushDictionary objectForKey:@"tags"];
-        
-        if (_pushCallbackDelegate && [_pushCallbackDelegate respondsToSelector:@selector(onConnect:tags:)]) {
-            [_pushCallbackDelegate onConnect:uid tags:tags];
+        if (tags != nil){
+            _tagsFromServer = tags;
         }
+        NSString* token = [pushDictionary objectForKey:@"token"];
+        if (token != nil) {
+            _tokenFromServer = token;
+        }
+        _tagsFromServer = [pushDictionary objectForKey:@"tags"];
+        [self log:@"info" format:@"connceted %@", pushDictionary];
+        if (_pushCallbackDelegate && [_pushCallbackDelegate respondsToSelector:@selector(onConnect:)]) {
+            [_pushCallbackDelegate onConnect:uid];
+        }
+        [self sendFailedPacket];
     }
 }
 
@@ -610,8 +677,6 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
         weakSelf.pongsMissed = 0;
         weakSelf.keepAliveState = KeepAlive_Connected;
         [weakSelf sendPushIdAndTopicToServer];
-        [weakSelf sendApnTokenToServer];
-        [weakSelf sendFailedPacket];
     });
 }
 

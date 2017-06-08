@@ -86,7 +86,7 @@ class ViewController: UIViewController, PushCallbackDelegate{
         self.navigationItem.title = "Disconnected"
     }
     
-    func onConnect(_ uid: String!, tags: [AnyObject]!) {
+    func onConnect(_ uid: String!) {
         print("onConnect \(uid)");
         let data:[String:String] = [
             "uid" : "123",
