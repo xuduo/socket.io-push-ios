@@ -108,10 +108,6 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 - (void)onApnToken:(NSData *)deviceTokenData {
     if(deviceTokenData){
         NSString *deviceTokenString = [self hexadecimalString:deviceTokenData];
-        if([_tokenFromServer isEqualToString:_deviceToken]){
-            [self log:@"debug" format:@"equal to server skip ",_deviceToken];
-            return;
-        }
         _deviceToken = deviceTokenString;
         [self log:@"info" format:@"_deviceToken %@",_deviceToken];
         [self sendApnTokenToServer];
@@ -269,10 +265,14 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
 }
 
 - (void)sendApnTokenToServer {
-    if (_keepAliveState == KeepAlive_Connected && [_deviceToken isEqualToString:_tokenFromServer] && _deviceToken != nil && _pushId != nil) {
-        NSString* bundleId = [[NSBundle mainBundle] bundleIdentifier];
-        [self sendToServer:@[@"apnToken", @{@"apnToken":_deviceToken, @"pushId":_pushId, @"bundleId":bundleId.length ? bundleId : @""}]];
-        NSLog(@"sendApnTokenToServer");
+    if (_keepAliveState == KeepAlive_Connected && _deviceToken != nil && _pushId != nil) {
+        if([_deviceToken isEqualToString:_tokenFromServer]) {
+            [self log:@"info" format:@"token equal server skip send"];
+            return;
+        }
+        NSDictionary *tokenObject =  [self getTokenObject];
+        [self log:@"info" format:@"sendApnTokenToServer %@", tokenObject];
+        [self sendToServer:@[@"token", tokenObject]];
     }
 }
 
@@ -309,10 +309,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
         [pushIdAndTopicDict setObject:_pushId forKey:@"id"];
         [pushIdAndTopicDict setObject:@(_version) forKey:@"version"];
         [pushIdAndTopicDict setObject:_platform forKey:@"platform"];
-        NSDictionary *tokenObject = [self getTokenObject];
-        if (tokenObject != nil) {
-            [pushIdAndTopicDict setObject:tokenObject forKey:@"token"];
-        }
+       
         if (_tagsToSet != nil) {
             [pushIdAndTopicDict setObject:_tagsToSet forKey:@"tags"];
         }
@@ -525,6 +522,7 @@ typedef NS_ENUM(NSUInteger, ProtocolDataType) {
             [_pushCallbackDelegate onConnect:uid];
         }
         [self sendFailedPacket];
+        [self sendApnTokenToServer];
     }
 }
 
